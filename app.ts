@@ -6,6 +6,7 @@ import { combineMiddlewares, type Middleware } from './middleware.ts'
 import { defaultErrorHandler, error404, error500, ErrorHandler, SequoiaError } from './error.ts'
 import { createMatcher, getRemoteAddress, outputHandlers, responseLog } from './util.ts'
 import type { HTTPHandler } from './middleware.ts'
+import { HTTPResponse } from './httpresponse.ts'
 
 export interface AppConfiguration {
     logging: boolean
@@ -42,7 +43,7 @@ export class Application {
         this.#configuration = { ...APP_CONFIG, ...configuration }
     }
 
-    public use = (...middlewares: Middleware[]) => {
+    public use = (...middlewares: Middleware[]): void => {
         for (const middle of middlewares) {
             this.#handlers.push({
                 path: '*',
@@ -53,11 +54,11 @@ export class Application {
         }
     }
 
-    public useRouter = (router: Router) => {
+    public useRouter = (router: Router): void => {
         this.#handlers.push(...router.getHandlers())
     }
 
-    public handleErrors = (handler: ErrorHandler) => {
+    public handleErrors = (handler: ErrorHandler): void => {
         this.#handleError = handler
     }
 
@@ -77,7 +78,7 @@ export class Application {
         return false
     }
 
-    protected matchHandlers = (request: Request) => {
+    protected matchHandlers = (request: Request): HTTPHandler[] => {
         return this.#handlers.filter(
             (handler) =>
                 this.checkHandler(
@@ -100,7 +101,7 @@ export class Application {
                 const path = new URL(request.url).pathname
                 const middleware = combineMiddlewares(path, handlers, this.#handleError)
 
-                const response = await middleware(context)
+                const response = (await middleware(context)) as HTTPResponse
                 response.applyCookies(context.cookies)
 
                 this.log('Matched handlers:')
@@ -116,7 +117,7 @@ export class Application {
         throw new SequoiaError('No listeners are defined for the application')
     }
 
-    protected handleHTTP = async (conn: Deno.Conn) => {
+    protected handleHTTP = async (conn: Deno.Conn): Promise<void> => {
         for await (const event of Deno.serveHttp(conn)) {
             let response: Response | undefined
 
@@ -136,7 +137,7 @@ export class Application {
     public listen = async (
         configuration: Partial<ServerConfiguration> = SERVER_CONFIG,
         callback?: () => void,
-    ) => {
+    ): Promise<void> => {
         if (!this.#listening) {
             this.#serverConfiguration = {
                 ...SERVER_CONFIG,
@@ -167,7 +168,7 @@ export class Application {
         }
     }
 
-    public close = () => {
+    public close = (): void => {
         if (this.#listener && this.#listening) {
             this.#listener.close()
             this.#listening = false

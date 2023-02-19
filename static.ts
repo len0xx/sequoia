@@ -9,7 +9,7 @@ import { defineContentType, normalizePath } from './util.ts'
 
 export const INDEX_FILENAME = 'index.html'
 
-export const fileExists = async (src: string) => {
+export const fileExists = async (src: string): Promise<boolean> => {
     try {
         return (await Deno.stat(src)).isFile
     } catch {

@@ -37,14 +37,14 @@ export class Router {
         this.#options = options
     }
 
-    public getHandlers = () => [...this.#handlers]
+    public getHandlers = (): HTTPHandler[] => [...this.#handlers]
 
     protected register = (
         methods: HTTPMethod | HTTPMethod[],
         path: RoutePath,
         middlewares: Middleware[],
         isStatic = false,
-    ) => {
+    ): void => {
         for (const middleware of middlewares) {
             this.#handlers.push({
                 path,
@@ -56,52 +56,52 @@ export class Router {
         }
     }
 
-    public GET = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public GET = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('GET', normalizePath(path), middlewares)
         return this
     }
 
-    public POST = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public POST = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('POST', normalizePath(path), middlewares)
         return this
     }
 
-    public PUT = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public PUT = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('PUT', normalizePath(path), middlewares)
         return this
     }
 
-    public PATCH = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public PATCH = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('PATCH', normalizePath(path), middlewares)
         return this
     }
 
-    public DELETE = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public DELETE = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('DELETE', normalizePath(path), middlewares)
         return this
     }
 
-    public HEAD = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public HEAD = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('HEAD', normalizePath(path), middlewares)
         return this
     }
 
-    public OPTIONS = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public OPTIONS = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('OPTIONS', normalizePath(path), middlewares)
         return this
     }
 
-    public CONNECT = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public CONNECT = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register('CONNECT', normalizePath(path), middlewares)
         return this
     }
 
-    public all = (path: RoutePath, ...middlewares: Middleware[]) => {
+    public all = (path: RoutePath, ...middlewares: Middleware[]): Router => {
         this.register([], normalizePath(path), middlewares)
         return this
     }
 
-    public static = (path: string, dir: string) => {
+    public static = (path: string, dir: string): Router => {
         const middleware: Middleware = async (context) => {
             const url = context.request.url
             try {
@@ -119,5 +119,6 @@ export class Router {
         }
 
         this.register('GET', normalizePath(path), [middleware], true)
+        return this
     }
 }

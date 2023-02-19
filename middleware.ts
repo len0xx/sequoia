@@ -37,7 +37,7 @@ export const combineMiddlewares = (
     path: string,
     handlers: HTTPHandler[],
     errorHandler = defaultErrorHandler,
-) => {
+): (context: Context) => MiddlewareReturn => {
     return (context: Context) => {
         const middlewares = handlers.map(
             (handler) => handler.middleware,

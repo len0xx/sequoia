@@ -13,12 +13,12 @@ export type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 
 export type IterableRecord<T> = Record<string, T> & Iterable<readonly [string, T]>
 
-export const defineContentType = (filename: string) => {
+export const defineContentType = (filename: string): string | undefined => {
     const ext = stdPath.extname(filename)
     return mediaTypes.contentType(ext)
 }
 
-export const normalizePath = (path: RoutePath) => {
+export const normalizePath = (path: RoutePath): RoutePath => {
     if (!(path instanceof RegExp) && path !== '*') {
         path = stdPath.normalize(path)
         path = path.endsWith('/') ? path.slice(0, path.length - 1) : path
@@ -38,11 +38,11 @@ export const convertToBody = <T>(input: T): BodyInit => {
     }
 }
 
-export const isRegExp = (path: RoutePath) => path instanceof RegExp
+export const isRegExp = (path: RoutePath): boolean => path instanceof RegExp
 
-export const splitPath = (path: string) => path.split('/').filter((part) => part)
+export const splitPath = (path: string): string[] => path.split('/').filter((part) => part)
 
-export const HTMLTemplate = (title: string, content: string) => {
+export const HTMLTemplate = (title: string, content: string): string => {
     return `<!DOCTYPE html>
     <html lang="en">
         <head>
@@ -56,7 +56,7 @@ export const HTMLTemplate = (title: string, content: string) => {
     </html>`
 }
 
-export const HTMLErrorTemplate = (error: HTTPError) => {
+export const HTMLErrorTemplate = (error: HTTPError): string => {
     return HTMLTemplate(
         `Error ${error.code}: ${error.message}`,
         `<div style="text-align: center;">
@@ -66,7 +66,7 @@ export const HTMLErrorTemplate = (error: HTTPError) => {
     )
 }
 
-export const parseCookies = (input: string) => {
+export const parseCookies = (input: string): Record<string, string> => {
     const inputArr = input.split(';').map((entry) => entry.trim())
     const result: Record<string, string> = {}
     for (const val of inputArr) {
@@ -76,7 +76,7 @@ export const parseCookies = (input: string) => {
     return result
 }
 
-export const getIterableRecord = <T>(src: Record<string, T>) => {
+export const getIterableRecord = <T>(src: Record<string, T>): IterableRecord<T> => {
     return {
         ...src,
         [Symbol.iterator]() {
@@ -115,7 +115,7 @@ export const redirect = (
     url: URL | string,
     status: HTTPStatus | Status = HTTPStatus.TEMP_REDIRECT,
     headers?: Headers | undefined,
-) => {
+): HTTPResponse => {
     const finalHeaders = headers || new Headers()
     finalHeaders.set('Location', url.toString())
 
@@ -138,7 +138,7 @@ export type Matcher = (route: string) => MatchResult
 
 export const createMatcher = (route: Path): Matcher => match(route, { decode: decodeURIComponent })
 
-export const combineHeaders = (...headers: Headers[]) => {
+export const combineHeaders = (...headers: Headers[]): Headers => {
     const result = new Headers()
     for (const setOfHeaders of headers) {
         if (setOfHeaders && setOfHeaders instanceof Headers) {
@@ -150,7 +150,9 @@ export const combineHeaders = (...headers: Headers[]) => {
     return result
 }
 
-export const outputHandlers = (handler: HTTPHandler) => ({
+export const outputHandlers = (
+    handler: HTTPHandler,
+): { path: RoutePath; methods: string; static: boolean } => ({
     path: handler.path,
     methods: handler.methods.length === 0 ? 'ANY' : handler.methods.join(', '),
     static: handler.static,
@@ -166,6 +168,6 @@ export const extractParams = (handler: HTTPHandler, path: string): Record<string
         : {}
 }
 
-export const responseLog = (response: HTTPResponse) => {
+export const responseLog = (response: HTTPResponse): string => {
     return `Response: ${response.status} ${!isError(response.status) ? 'OK' : 'ERROR'}`
 }

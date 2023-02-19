@@ -25,7 +25,7 @@ export type HTTPResponseInit =
     | ResponseBodyFunction
     | HTTPResponseOptions
 
-export const isStatusNullBody = (status: HTTPStatus | Status) => (
+export const isStatusNullBody = (status: HTTPStatus | Status): boolean => (
     status === HTTPStatus.SWITCHING_PROTOCOLS ||
     status === HTTPStatus.NO_CONTENT ||
     status === HTTPStatus.RESET_CONTENT ||
@@ -55,7 +55,7 @@ export class HTTPResponse {
         }
     }
 
-    transform = () => {
+    transform = (): Response => {
         const res = {
             body: isStatusNullBody(this.status) ? null : convertToBody(this.body),
             status: this.status,
@@ -75,13 +75,13 @@ export class HTTPResponse {
         return new Response(res.body, { status: res.status, headers: res.headers })
     }
 
-    empty = () => {
+    empty = (): boolean => {
         let headers = 0
         for (const _ of this.headers.keys()) headers++
         return (headers === 0 && !this.body)
     }
 
-    applyCookies = (storage: CookieStorage) => {
+    applyCookies = (storage: CookieStorage): void => {
         if (storage.size()) {
             const cookies = storage.entries().filter((entry) => entry[1].overwrite)
             for (const cookie of cookies) {
