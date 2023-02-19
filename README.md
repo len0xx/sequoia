@@ -1,8 +1,18 @@
-# Sequoia
+# Sequoia 🦕
 
-A web-server for Deno based on middlewares
+A library for handling HTTP requests by using middlewares. Inspired by [Oak](https://github.com/oakserver/oak)
 
-Simple usage example:
+## Usage
+
+### Prerequisites
+
+To use this library you obviously need Deno (v 1.30.3 or later) to be install on your machine. Check out the [installation guide](https://deno.land/manual@v1.30.3/getting_started/installation)
+
+### Getting started
+
+Using Sequoia might seem familiar to those who had some experience with Oak, Koa, Express or any other middleware library.
+
+To get started you can use this example:
 ```javascript
 // example.ts
 import { Application, Router, HTTPStatus, HTTPResponse } from 'https://deno.land/x/sequoia/mod.ts'
@@ -24,7 +34,7 @@ router.GET('/', (ctx) => {
 app.useRouter(router)
 
 const APP_IP = Deno.env.get('APP_IP') ?? '127.0.0.1'
-const APP_PORT = Number(Deno.env.get('APP_PORT') ?? 80)
+const APP_PORT = Number(Deno.env.get('APP_PORT') ?? 8000)
 
 app.listen(
 	{ hostname: APP_IP, port: APP_PORT },
@@ -33,4 +43,9 @@ app.listen(
 ```
 
 To run this example just use:
+
 `deno run --allow-net --allow-env example.ts`
+
+After running this command the server is running, so you can go to `http://localhost:8000` in your browser and there you can see the response which might look like this: `{ 'ok': true, 'agent': 'curl/7.85.0' }`
+
+To see more examples visit: [examples](https://github.com/len0xx/sequoia/blob/main/examples)
