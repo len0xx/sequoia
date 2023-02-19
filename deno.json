@@ -1,0 +1,60 @@
+{
+    "tasks": {
+        "lint:fmt": "deno lint && deno fmt",
+        "test-basic": "deno test --allow-net test/util",
+        "test-complex": "bash test/server/setup.sh",
+        "test": "deno task test-basic && deno task test-complex",
+        "check": "deno task lint:fmt && deno task test",
+        "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
+        "params": "deno run --allow-net=127.0.0.1:8000 --watch examples/params.ts",
+        "cookie": "deno run --allow-net=127.0.0.1:8000 --watch examples/cookie.ts",
+        "regex": "deno run --allow-net=127.0.0.1:8000 --watch examples/regex.ts",
+        "request": "deno run --allow-net=127.0.0.1:8000 --watch examples/extend-request.ts",
+        "response": "deno run --allow-net=127.0.0.1:8000 --watch examples/response-types.ts",
+        "static": "deno run --allow-net=127.0.0.1:8000 --allow-read=examples/static --watch examples/static.ts",
+        "sveltekit": "deno run --allow-net=127.0.0.1:8000 --allow-read=examples/sveltekit --watch examples/sveltekit.ts"
+    },
+    "lint": {
+        "files": {
+            "include": ["src/", "test/"]
+        },
+        "rules": {
+            "tags": ["recommended"],
+            "include": [
+                "ban-unused-ignore",
+                "eqeqeq",
+                "camelcase",
+                "no-class-assign",
+                "no-compare-neg-zero",
+                "no-cond-assign",
+                "no-constant-condition",
+                "no-delete-var",
+                "no-deprecated-deno-api",
+                "no-dupe-else-if",
+                "no-empty",
+                "no-eval",
+                "no-ex-assign",
+                "no-extra-boolean-cast",
+                "no-external-imports"
+            ]
+        }
+    },
+    "fmt": {
+        "files": {
+            "exclude": [
+                "examples/build",
+                "examples/static",
+                "examples/sveltekit",
+                "LICENSE.md"
+            ]
+        },
+        "options": {
+            "semiColons": false,
+            "singleQuote": true,
+            "useTabs": false,
+            "indentWidth": 4,
+            "lineWidth": 100,
+            "proseWrap": "always"
+        }
+    }
+}
