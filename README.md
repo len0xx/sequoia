@@ -1,7 +1,10 @@
-# Sequoia – a web-server for Deno based on middlewares
+# Sequoia
+
+A web-server for Deno based on middlewares
 
 Simple usage example:
 ```javascript
+// example.ts
 import { Application, Router, HTTPStatus, HTTPResponse } from 'https://deno.land/x/sequoia/mod.ts'
 
 const app = new Application({ logging: true })
