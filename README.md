@@ -21,14 +21,14 @@ const app = new Application({ logging: true })
 const router = new Router({ type: 'application/json' })
 
 router.GET('/', (ctx) => {
-	const agent = ctx.request.headers.get('User-Agent')
-	ctx.response.headers.set('X-Powered-By', 'Sequoia')
-	ctx.cookies.set('WebServer', 'Sequoia')
-	
-	return new HTTPResponse({
-		status: HTTPStatus.SUCCESS,
-		body: { ok: true, agent }
-	})
+    const agent = ctx.request.headers.get('User-Agent')
+    ctx.response.headers.set('X-Powered-By', 'Sequoia')
+    ctx.cookies.set('WebServer', 'Sequoia')
+
+    return new HTTPResponse({
+        status: HTTPStatus.SUCCESS,
+        body: { ok: true, agent }
+    })
 })
 
 app.useRouter(router)
@@ -37,8 +37,8 @@ const APP_IP = Deno.env.get('APP_IP') ?? '127.0.0.1'
 const APP_PORT = Number(Deno.env.get('APP_PORT') ?? 8000)
 
 app.listen(
-	{ hostname: APP_IP, port: APP_PORT },
-	() => console.log('The sequoia server is up!')
+    { hostname: APP_IP, port: APP_PORT },
+    () => console.log('The sequoia server is up!')
 )
 ```
 
