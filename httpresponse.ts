@@ -25,12 +25,14 @@ export type HTTPResponseInit =
     | ResponseBodyFunction
     | HTTPResponseOptions
 
-export const isStatusNullBody = (status: HTTPStatus | Status): boolean => (
-    status === HTTPStatus.SWITCHING_PROTOCOLS ||
-    status === HTTPStatus.NO_CONTENT ||
-    status === HTTPStatus.RESET_CONTENT ||
-    status === HTTPStatus.NOT_MODIFIED
-)
+export function isStatusNullBody(status: HTTPStatus | Status): boolean {
+    return (
+        status === HTTPStatus.SWITCHING_PROTOCOLS ||
+        status === HTTPStatus.NO_CONTENT ||
+        status === HTTPStatus.RESET_CONTENT ||
+        status === HTTPStatus.NOT_MODIFIED
+    )
+}
 
 export class HTTPResponse {
     readonly body: ResponseBody = null

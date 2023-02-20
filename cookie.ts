@@ -12,14 +12,14 @@ export interface CookiesOptions {
     overwrite?: boolean
 }
 
-const recordToStorage = (src: Record<string, string>, options: CookiesOptions = {}) => (
-    Object.entries(src).map(
+export function recordToStorage(src: Record<string, string>, options: CookiesOptions = {}) {
+    return Object.entries(src).map(
         (entry) => [entry[0], new Cookie(entry[0], entry[1], options)],
     ) as [
         string,
         Cookie,
     ][]
-)
+}
 
 export class CookieStorage {
     readonly #storage: Map<string, Cookie>

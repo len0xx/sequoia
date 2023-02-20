@@ -28,7 +28,7 @@ export type ErrorHandler = (
     error: HTTPError,
 ) => Promise<HTTPResponse> | HTTPResponse
 
-export const defaultErrorHandler: ErrorHandler = (_: Context, error: HTTPError) => {
+export const defaultErrorHandler: ErrorHandler = (_ctx: Context, error: HTTPError) => {
     return new HTTPResponse({
         status: error.code,
         type: 'text/html; charset=UTF-8',

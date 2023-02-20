@@ -13,12 +13,12 @@ export type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 
 export type IterableRecord<T> = Record<string, T> & Iterable<readonly [string, T]>
 
-export const defineContentType = (filename: string): string | undefined => {
+export function defineContentType(filename: string): string | undefined {
     const ext = stdPath.extname(filename)
     return mediaTypes.contentType(ext)
 }
 
-export const normalizePath = (path: RoutePath): RoutePath => {
+export function normalizePath(path: RoutePath): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
         path = stdPath.normalize(path)
         path = path.endsWith('/') ? path.slice(0, path.length - 1) : path
@@ -27,7 +27,7 @@ export const normalizePath = (path: RoutePath): RoutePath => {
     return path
 }
 
-export const convertToBody = <T>(input: T): BodyInit => {
+export function convertToBody<T>(input: T): BodyInit {
     if (
         input instanceof Blob || input instanceof FormData || input instanceof URLSearchParams ||
         input instanceof ReadableStream<Uint8Array> || typeof input === 'string'
@@ -38,11 +38,15 @@ export const convertToBody = <T>(input: T): BodyInit => {
     }
 }
 
-export const isRegExp = (path: RoutePath): boolean => path instanceof RegExp
+export function isRegExp(path: RoutePath): boolean {
+    return path instanceof RegExp
+}
 
-export const splitPath = (path: string): string[] => path.split('/').filter((part) => part)
+export function splitPath(path: string): string[] {
+    return path.split('/').filter(Boolean)
+}
 
-export const HTMLTemplate = (title: string, content: string): string => {
+export function HTMLTemplate(title: string, content: string): string {
     return `<!DOCTYPE html>
     <html lang="en">
         <head>
@@ -56,7 +60,7 @@ export const HTMLTemplate = (title: string, content: string): string => {
     </html>`
 }
 
-export const HTMLErrorTemplate = (error: HTTPError): string => {
+export function HTMLErrorTemplate(error: HTTPError): string {
     return HTMLTemplate(
         `Error ${error.code}: ${error.message}`,
         `<div style="text-align: center;">
@@ -66,7 +70,7 @@ export const HTMLErrorTemplate = (error: HTTPError): string => {
     )
 }
 
-export const parseCookies = (input: string): Record<string, string> => {
+export function parseCookies(input: string): Record<string, string> {
     const inputArr = input.split(';').map((entry) => entry.trim())
     const result: Record<string, string> = {}
     for (const val of inputArr) {
@@ -76,7 +80,7 @@ export const parseCookies = (input: string): Record<string, string> => {
     return result
 }
 
-export const getIterableRecord = <T>(src: Record<string, T>): IterableRecord<T> => {
+export function getIterableRecord<T>(src: Record<string, T>): IterableRecord<T> {
     return {
         ...src,
         [Symbol.iterator]() {
@@ -106,16 +110,16 @@ export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {
     }
 }
 
-export const getRemoteAddress = (connection: Deno.Conn): Deno.NetAddr => {
+export function getRemoteAddress(connection: Deno.Conn): Deno.NetAddr {
     assertIsNetAddr(connection.remoteAddr)
     return connection.remoteAddr
 }
 
-export const redirect = (
+export function redirect(
     url: URL | string,
     status: HTTPStatus | Status = HTTPStatus.TEMP_REDIRECT,
     headers?: Headers | undefined,
-): HTTPResponse => {
+): HTTPResponse {
     const finalHeaders = headers || new Headers()
     finalHeaders.set('Location', url.toString())
 
@@ -136,9 +140,11 @@ export type MatchResult = MatchSuccess | false
 
 export type Matcher = (route: string) => MatchResult
 
-export const createMatcher = (route: Path): Matcher => match(route, { decode: decodeURIComponent })
+export function createMatcher(route: Path): Matcher {
+    return match(route, { decode: decodeURIComponent })
+}
 
-export const combineHeaders = (...headers: Headers[]): Headers => {
+export function combineHeaders(...headers: Headers[]): Headers {
     const result = new Headers()
     for (const setOfHeaders of headers) {
         if (setOfHeaders && setOfHeaders instanceof Headers) {
@@ -150,15 +156,17 @@ export const combineHeaders = (...headers: Headers[]): Headers => {
     return result
 }
 
-export const outputHandlers = (
+export function outputHandlers(
     handler: HTTPHandler,
-): { path: RoutePath; methods: string; static: boolean } => ({
-    path: handler.path,
-    methods: handler.methods.length === 0 ? 'ANY' : handler.methods.join(', '),
-    static: handler.static,
-})
+): { path: RoutePath; methods: string; static: boolean } {
+    return {
+        path: handler.path,
+        methods: handler.methods.length === 0 ? 'ANY' : handler.methods.join(', '),
+        static: handler.static,
+    }
+}
 
-export const extractParams = (handler: HTTPHandler, path: string): Record<string, string> => {
+export function extractParams(handler: HTTPHandler, path: string): Record<string, string> {
     const match = handler.path !== '*' ? createMatcher(handler.path) : (_: string) => false
     return (
             !(isRegExp(handler.path) ||
@@ -168,6 +176,6 @@ export const extractParams = (handler: HTTPHandler, path: string): Record<string
         : {}
 }
 
-export const responseLog = (response: HTTPResponse): string => {
+export function responseLog(response: HTTPResponse): string {
     return `Response: ${response.status} ${!isError(response.status) ? 'OK' : 'ERROR'}`
 }

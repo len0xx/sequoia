@@ -9,7 +9,7 @@ import { defineContentType, normalizePath } from './util.ts'
 
 export const INDEX_FILENAME = 'index.html'
 
-export const fileExists = async (src: string): Promise<boolean> => {
+export async function fileExists(src: string): Promise<boolean> {
     try {
         return (await Deno.stat(src)).isFile
     } catch {
@@ -17,7 +17,7 @@ export const fileExists = async (src: string): Promise<boolean> => {
     }
 }
 
-export const serveFile = async (src: string): Promise<HTTPResponse> => {
+export async function serveFile(src: string): Promise<HTTPResponse> {
     try {
         const fileInfo = await Deno.stat(src)
         if (fileInfo.isDirectory) {
@@ -40,7 +40,7 @@ export const serveFile = async (src: string): Promise<HTTPResponse> => {
     return response
 }
 
-export const serveStatic = async (url: URL, path: string, dir: string): Promise<HTTPResponse> => {
+export async function serveStatic(url: URL, path: string, dir: string): Promise<HTTPResponse> {
     const filename = url.pathname.endsWith('/') ? '/' : stdPath.basename(url.pathname)
     const relativePath = url.pathname.replace(normalizePath(path), '')
 

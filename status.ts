@@ -76,13 +76,22 @@ export enum HTTPStatus {
     NETWORK_AUTH_FAILED = 511,
 }
 
-export const isSuccessful = (status: HTTPStatus | Status): boolean => status >= 100 && status < 300
+export function isSuccessful(status: HTTPStatus | Status): boolean {
+    return status >= 100 && status < 300
+}
 
-export const isRedirect = (status: HTTPStatus | Status): boolean => status >= 300 && status < 400
+export function isRedirect(status: HTTPStatus | Status): boolean {
+    return status >= 300 && status < 400
+}
 
-export const isClientError = (status: HTTPStatus | Status): boolean => status >= 400 && status < 500
+export function isClientError(status: HTTPStatus | Status): boolean {
+    return status >= 400 && status < 500
+}
 
-export const isServerError = (status: HTTPStatus | Status): boolean => status >= 500 && status < 600
+export function isServerError(status: HTTPStatus | Status): boolean {
+    return status >= 500 && status < 600
+}
 
-export const isError = (status: HTTPStatus | Status): boolean =>
-    isClientError(status) || isServerError(status)
+export function isError(status: HTTPStatus | Status): boolean {
+    return isClientError(status) || isServerError(status)
+}
