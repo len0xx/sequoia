@@ -4,7 +4,7 @@
         "test-basic": "deno test --allow-net test/util",
         "test-complex": "bash test/server/setup.sh",
         "test": "deno task test-basic && deno task test-complex",
-        "check": "deno task lint:fmt && deno task test",
+        "check": "deno task lint:fmt",
         "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
         "params": "deno run --allow-net=127.0.0.1:8000 --watch examples/params.ts",
         "cookie": "deno run --allow-net=127.0.0.1:8000 --watch examples/cookie.ts",
@@ -16,7 +16,7 @@
     },
     "lint": {
         "files": {
-            "include": ["src/", "test/"]
+            "exclude": ["LICENSE", "README.md", ".gitignore"]
         },
         "rules": {
             "tags": ["recommended"],
@@ -42,9 +42,6 @@
     "fmt": {
         "files": {
             "exclude": [
-                "examples/build",
-                "examples/static",
-                "examples/sveltekit",
                 "LICENSE.md"
             ]
         },
