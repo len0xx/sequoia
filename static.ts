@@ -59,7 +59,6 @@ export async function serveStatic(url: URL, path: string, dir: string): Promise<
             }
             return response
         } catch (error) {
-            console.error(error)
             if (error instanceof HTTPError) {
                 throw error
             }

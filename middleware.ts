@@ -67,7 +67,6 @@ export function combineMiddlewares(
                 ) as HTTPResponse | undefined
             } catch (error) {
                 if (error instanceof HTTPError) {
-                    console.error(error)
                     response = await errorHandler(context, error)
                 } else {
                     throw error
