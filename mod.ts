@@ -58,11 +58,10 @@
  */
 
 export * from './app.ts'
-export * from './router.ts'
-export * from './error.ts'
-export * from './httpresponse.ts'
-export * from './httprequest.ts'
-export * from './status.ts'
-export * from './middleware.ts'
+export { Router } from './router.ts'
+export { HTTPError } from './error.ts'
+export { type HTTPContextResponse, HTTPResponse } from './httpresponse.ts'
+export { HTTPContextRequest } from './httprequest.ts'
+export { HTTPStatus } from './status.ts'
+export type { Middleware, MiddlewareReturn, NextMiddleware } from './middleware.ts'
 export * from './context.ts'
-export * from './util.ts'
