@@ -158,8 +158,9 @@ export function combineHeaders(...headers: Headers[]): Headers {
 
 export function outputHandlers(
     handler: HTTPHandler,
-): { path: RoutePath; methods: string; static: boolean } {
+): Pick<HTTPHandler, 'root' | 'path' | 'static'> & { methods: string } {
     return {
+        root: handler.root,
         path: handler.path,
         methods: handler.methods.length === 0 ? 'ANY' : handler.methods.join(', '),
         static: handler.static,

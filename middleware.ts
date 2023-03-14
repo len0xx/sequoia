@@ -31,6 +31,7 @@ export interface HTTPHandler {
     middleware: Middleware
     static: boolean
     options?: RouterOptions
+    root: string
 }
 
 export function combineMiddlewares(

@@ -48,6 +48,7 @@ export class Router {
         for (const middleware of middlewares) {
             this.#handlers.push({
                 path,
+                root: '/',
                 middleware,
                 static: isStatic,
                 methods: typeof methods === 'string' ? [methods] : methods,

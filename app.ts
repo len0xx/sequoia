@@ -2,10 +2,15 @@
 
 import { Router } from './router.ts'
 import { Context } from './context.ts'
-import { combineMiddlewares, type Middleware } from './middleware.ts'
+import { combineMiddlewares, type HTTPHandler, type Middleware } from './middleware.ts'
 import { defaultErrorHandler, error404, error500, ErrorHandler, SequoiaError } from './error.ts'
-import { createMatcher, getRemoteAddress, outputHandlers, responseLog } from './util.ts'
-import type { HTTPHandler } from './middleware.ts'
+import {
+    createMatcher,
+    getRemoteAddress,
+    normalizePath,
+    outputHandlers,
+    responseLog,
+} from './util.ts'
 import { HTTPResponse } from './httpresponse.ts'
 
 export interface AppConfiguration {
@@ -31,6 +36,16 @@ const SERVER_CONFIG: ServerConfiguration = {
     port: 80,
 }
 
+export type UseMethod = {
+    (path: string, ...middlewares: Middleware[]): void
+    (...middlewares: Middleware[]): void
+}
+
+export type UseRouterMethod = {
+    (path: string, router: Router): void
+    (router: Router): void
+}
+
 export class Application {
     #configuration: AppConfiguration
     #serverConfiguration = SERVER_CONFIG
@@ -43,19 +58,53 @@ export class Application {
         this.#configuration = { ...APP_CONFIG, ...configuration }
     }
 
-    public use = (...middlewares: Middleware[]): void => {
-        for (const middle of middlewares) {
-            this.#handlers.push({
-                path: '*',
-                middleware: middle,
-                static: false,
-                methods: [],
-            } as HTTPHandler)
+    public use: UseMethod = (
+        pathOrMiddlewares: string | Middleware,
+        ...middlewares: Middleware[]
+    ): void => {
+        const middles: Middleware[] = []
+
+        if (typeof pathOrMiddlewares === 'string') {
+            middles.push(...middlewares)
+        } else {
+            middles.push(...[pathOrMiddlewares, ...middlewares])
+        }
+
+        for (const middle of middles) {
+            if (typeof middle === 'function') {
+                this.#handlers.push({
+                    root: typeof pathOrMiddlewares === 'string' ? pathOrMiddlewares : '/',
+                    path: '*',
+                    middleware: middle,
+                    static: false,
+                    methods: [],
+                } as HTTPHandler)
+            } else {
+                throw new SequoiaError('Only functions may be passed to this method as middlwares')
+            }
         }
     }
 
-    public useRouter = (router: Router): void => {
-        this.#handlers.push(...router.getHandlers())
+    public useRouter: UseRouterMethod = (
+        pathOrRouter: string | Router,
+        router?: Router | undefined,
+    ): void => {
+        if (pathOrRouter && pathOrRouter instanceof Router) {
+            this.#handlers.push(...pathOrRouter.getHandlers())
+        } else if (
+            pathOrRouter && router && typeof pathOrRouter === 'string' && router instanceof Router
+        ) {
+            const root = normalizePath(pathOrRouter)
+            this.#handlers.push(
+                ...router.getHandlers().map(
+                    (handler) => ({ ...handler, root } as HTTPHandler),
+                ),
+            )
+        } else {
+            throw new SequoiaError(
+                'Unexpected parameter types for Application.useRouter(). Check documentation for more information',
+            )
+        }
     }
 
     public handleErrors = (handler: ErrorHandler): void => {
@@ -63,9 +112,16 @@ export class Application {
     }
 
     protected checkHandler = (handler: HTTPHandler, path: string, method: string): boolean => {
-        if (handler.methods.includes(method) || handler.methods.length === 0) {
+        const relativePath = handler.root === '/'
+            ? path
+            : normalizePath(path.split(handler.root)[1] || '/') as string
+
+        if (
+            (handler.methods.includes(method) || handler.methods.length === 0) &&
+            path.startsWith(handler.root)
+        ) {
             if (handler.path instanceof RegExp) {
-                return handler.path.test(path)
+                return handler.path.test(relativePath)
             } else if (
                 handler.path === '*' ||
                 path === handler.path && path === '/' ||
@@ -73,7 +129,7 @@ export class Application {
             ) return true
 
             const match = createMatcher(handler.path)
-            return Boolean(match(path))
+            return Boolean(match(relativePath))
         }
         return false
     }
