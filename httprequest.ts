@@ -15,14 +15,6 @@ export class HTTPContextRequest<
     readonly originalRequest: Request
     params: Params
 
-    clone: () => Request
-    arrayBuffer: () => Promise<ArrayBuffer>
-    blob: () => Promise<Blob>
-    formData: () => Promise<FormData>
-    // deno-lint-ignore no-explicit-any
-    json: () => Promise<any>
-    text: () => Promise<string>
-
     constructor(request: Request, params: Params = {} as Params) {
         this.body = request.body
         this.bodyUsed = request.bodyUsed
@@ -33,12 +25,5 @@ export class HTTPContextRequest<
         this.method = request.method
         this.originalRequest = request
         this.params = params
-
-        this.clone = request.clone
-        this.arrayBuffer = request.arrayBuffer
-        this.blob = request.blob
-        this.formData = request.formData
-        this.json = request.json
-        this.text = request.text
     }
 }
