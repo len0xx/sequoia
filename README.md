@@ -1,6 +1,6 @@
 # Sequoia 🦕
 
-A library for handling HTTP requests by using middlewares. Inspired by [Oak](https://github.com/oakserver/oak)
+A library for handling HTTP requests by using middlewares. Inspired by [Oak](https://github.com/oakserver/oak). Written in TypeScript, works with Deno runtime
 
 ## Usage
 
