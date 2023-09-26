@@ -5,7 +5,6 @@ import { HTTPStatus } from './status.ts'
 import { CookieStorage } from './cookie.ts'
 import { convertToBody, type Writeable } from './util.ts'
 
-// deno-lint-ignore ban-types
 export type ResponseBody = string | number | bigint | boolean | symbol | object | null | undefined
 export type ResponseBodyFunction = () => ResponseBody | Promise<ResponseBody>
 
@@ -58,23 +57,21 @@ export class HTTPResponse {
     }
 
     transform = (): Response => {
-        const res = {
-            body: isStatusNullBody(this.status) ? null : convertToBody(this.body),
-            status: this.status,
-            headers: new Headers(),
-        }
+        const body: BodyInit | null = isStatusNullBody(this.status) ? null : convertToBody(this.body)
+        const headers = new Headers()
+        const status = this.status
 
         if (this.headers) {
             for (const [key, val] of this.headers.entries()) {
                 if (typeof val === 'string' && val) {
-                    res.headers.append(key, val)
+                    headers.append(key, val)
                 }
             }
         }
 
-        if (this.type) res.headers.set('Content-Type', this.type)
+        if (this.type) headers.set('Content-Type', this.type)
 
-        return new Response(res.body, { status: res.status, headers: res.headers })
+        return new Response(body, { status: status, headers: headers })
     }
 
     empty = (): boolean => {

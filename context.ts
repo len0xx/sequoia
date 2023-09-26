@@ -8,6 +8,12 @@ import { HTTPContextResponse, HTTPResponse } from './httpresponse.ts'
 import type { RouteParams } from './router.ts'
 import { serveStatic } from './static.ts'
 
+export type SendOptions = {
+    path: string
+    root: string
+    extensions: string[]
+}
+
 export class Context<
     ParamsT extends Record<string, string> = RouteParams,
     RequestT extends HTTPContextRequest<ParamsT> = HTTPContextRequest<ParamsT>,
@@ -28,7 +34,7 @@ export class Context<
         this.cookies = new CookieStorage(cookies ? parseCookies(cookies) : undefined)
     }
 
-    public send = async (path: string, dir: string): Promise<HTTPResponse> => {
-        return await serveStatic(this.request.url, path, dir)
+    public send = async (options: SendOptions): Promise<HTTPResponse> => {
+        return await serveStatic(this.request.url, '/', options.root)
     }
 }
