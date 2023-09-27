@@ -57,7 +57,9 @@ export class HTTPResponse {
     }
 
     transform = (): Response => {
-        const body: BodyInit | null = isStatusNullBody(this.status) ? null : convertToBody(this.body)
+        const body: BodyInit | null = isStatusNullBody(this.status)
+            ? null
+            : convertToBody(this.body)
         const headers = new Headers()
         const status = this.status
 
