@@ -1,7 +1,7 @@
 // Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
 
 import { stdPath } from './deps.ts'
-import { HTTPError } from './error.ts'
+import { HTTPError, InternalError, NotFoundError } from './error.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { ContentType } from './media.ts'
 import { HTTPStatus } from './status.ts'
@@ -25,7 +25,7 @@ export async function serveFile(src: string): Promise<HTTPResponse> {
         }
     } catch (error) {
         if (error instanceof Deno.errors.NotFound) {
-            throw new HTTPError(HTTPStatus.NOT_FOUND, 'The file is not found')
+            throw new NotFoundError('The file is not found')
         } else throw error
     }
 
@@ -62,8 +62,7 @@ export async function serveStatic(url: URL, path: string, dir: string): Promise<
             if (error instanceof HTTPError) {
                 throw error
             }
-            throw new HTTPError(
-                HTTPStatus.INTERNAL_ERROR,
+            throw new InternalError(
                 error instanceof Error ? error.message : 'Internal server error',
             )
         }
