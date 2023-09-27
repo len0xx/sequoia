@@ -88,8 +88,9 @@ Right now Sequoia is only maintained by its original creator ([@len0xx](https://
 
 The features that are expected in the upcoming releases:
 
+- [ ] Allow serving static files via CLI
 - [ ] Examples folder
 - [ ] Support for TLS
 - [ ] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for WebSockets
-- [ ] Compatibility with `svelte-adapter-deno`
+- [ ] Better compatibility with `svelte-adapter-deno`
