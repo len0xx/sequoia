@@ -30,7 +30,7 @@ export function normalizePath(path: RoutePath): RoutePath {
 export function convertToBody<T>(input: T): BodyInit {
     if (
         input instanceof Blob || input instanceof FormData || input instanceof URLSearchParams ||
-        input instanceof ReadableStream<Uint8Array> || typeof input === 'string'
+        input instanceof ReadableStream || typeof input === 'string'
     ) {
         return input as BodyInit
     } else {
