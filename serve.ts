@@ -1,3 +1,5 @@
+// Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
+
 import { Application } from './mod.ts'
 import { Router } from './router.ts'
 import { parse, stdPath } from './deps.ts'
