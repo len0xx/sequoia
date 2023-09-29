@@ -59,7 +59,7 @@
 
 export * from './app.ts'
 export { Router, type RouteParams } from './router.ts'
-export * from './error.ts'
+export { HTTPError, type ErrorHandler } from './error.ts'
 export { type HTTPContextResponse, HTTPResponse } from './httpresponse.ts'
 export { HTTPContextRequest } from './httprequest.ts'
 export { HTTPStatus } from './status.ts'
