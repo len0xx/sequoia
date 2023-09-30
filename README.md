@@ -82,7 +82,7 @@ To run this example just use:
 
 To run it on custom IP or port, simply define them as environment variables:
 
-`HOST=127.0.0.1 PORT=4000 deno run --allow-net --allow-env example.ts`
+`HOST=0.0.0.0 PORT=4000 deno run --allow-net --allow-env example.ts`
 
 After running this command the server is running, so you can go to `http://localhost:8000` in your browser and there you can see the response which might look like this: `{ 'ok': true, 'agent': 'curl/7.85.0' }`
 
