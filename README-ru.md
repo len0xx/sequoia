@@ -101,7 +101,7 @@ app.listen(
 
 После этого вы можете перейти по адресу `http://localhost:8000` в браузере и увидеть текст наподобие `{ 'ok': true, 'agent': 'curl/7.85.0' }`
 
-Больше примеров можно найти в GitHub Wiki: **[examples](https://github.com/len0xx/sequoia/wiki)**
+Больше примеров можно найти на сайте: **[examples](https://sequoia.len0xx.ru/guides)**
 
 ## Дальнейшие планы
 
