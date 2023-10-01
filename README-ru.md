@@ -2,6 +2,8 @@
 
 Библиотека для создания веб-серверов с помощью т.н. middleware. Написана на TypeScript, работает с Deno. Создана по подобию [Oak](https://github.com/oakserver/oak)
 
+Официальный сайт: [sequoia.len0xx.ru](https://sequoia.len0xx.ru)
+
 > English version is available at [/README.md](https://github.com/len0xx/sequoia/blob/main/README.md)
 
 ## Почему выбрать Sequoia?
