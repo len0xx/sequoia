@@ -2,6 +2,8 @@
 
 A library for handling HTTP requests by using middlewares. Written in TypeScript, works with Deno runtime. Inspired by [Oak](https://github.com/oakserver/oak)
 
+Check out the [website](https://sequoia.len0xx.ru)
+
 > Русская версия доступна тут: [/README-ru.md](https://github.com/len0xx/sequoia/blob/main/README-ru.md)
 
 ## Why Sequoia?
