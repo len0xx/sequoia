@@ -94,7 +94,7 @@ To run it on custom IP or port, simply define them as environment variables:
 
 After running this command the server is running, so you can go to `http://localhost:8000` in your browser and there you can see the response which might look like this: `{ 'ok': true, 'agent': 'curl/7.85.0' }`
 
-To see more examples visit: **[examples](https://github.com/len0xx/sequoia/wiki)**
+To see more examples visit **[the website](https://sequoia.len0xx.ru/guides)**
 
 ## Roadmap
 
