@@ -6,7 +6,11 @@ A library for handling HTTP requests by using middlewares. Written in TypeScript
 
 ## Why Sequoia?
 
-It provides you a set of powerful utilities to create fast web servers with great Developer Experience. If you ever had some experience with web frameworks, you've probably wrote something like this:
+`Sequoia` was developed to enhance the Developer Experience for those who create APIs with `Node.js/Deno`. `Node.js` has a lot of disadvantages compared to `Deno`. That's why `Sequoia` was developed first for `Deno`. Probably it will be adapted to work with `Node.js` in the future. Read more about `Deno` on the website
+
+You may consider `Sequoia` as an advanced and simplified version of `Express` or `Oak`. Because for now the libraries have a lot of similarities, but it's a subject to change in the future
+
+Moving to the examples, if you've ever developed an API in `Node.js` or `Deno`, this code might look familiar to you:
 ```javascript
 // express.js
 app.get('/', (req, res) => {
