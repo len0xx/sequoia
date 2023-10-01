@@ -44,7 +44,7 @@ To use this library you obviously need Deno (`v1.30.3` or later) to be install o
 
 ### Getting started
 
-Using Sequoia might seem familiar to those who had some experience with Oak, Koa, Express or any other middleware library.
+Using `Sequoia` might seem familiar to those who had some experience with `Oak`, `Koa`, `Express` or any other middleware library.
 
 > **Warning**: The project is still in Beta stage. So the API and the provided functionality might change after achieving `v1.0.0`
 
