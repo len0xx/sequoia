@@ -26,4 +26,24 @@ export class HTTPContextRequest<
         this.originalRequest = request
         this.params = params
     }
+
+    async json() {
+        return await this.originalRequest.json()
+    }
+
+    async text() {
+        return await this.originalRequest.text()
+    }
+
+    async formData() {
+        return await this.originalRequest.formData()
+    }
+
+    async blob() {
+        return await this.originalRequest.blob()
+    }
+
+    async arrayBuffer() {
+        return await this.originalRequest.arrayBuffer()
+    }
 }
