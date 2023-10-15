@@ -71,7 +71,7 @@ export function HTMLErrorTemplate(error: HTTPError): string {
 }
 
 export function parseCookies(input: string): Record<string, string> {
-    const inputArr = input.split(';').map((entry) => entry.trim())
+    const inputArr = input.split(';').filter(Boolean).map((entry) => entry.trim())
     const result: Record<string, string> = {}
     for (const val of inputArr) {
         const cur = val.split('=')

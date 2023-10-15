@@ -1,9 +1,7 @@
 {
     "tasks": {
-        "lint:fmt": "deno lint --ignore=examples && deno fmt --ignore=examples,README.md",
-        "test-basic": "deno test --allow-net test/util",
-        "test-complex": "bash test/server/setup.sh",
-        "test": "deno task test-basic && deno task test-complex",
+        "lint:fmt": "deno lint --ignore=examples && deno fmt --ignore=examples,README.md,README-ru.md",
+        "test": "deno test test",
         "check": "deno task lint:fmt",
         "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
         "params": "deno run --allow-net=127.0.0.1:8000 --watch examples/params.ts",
