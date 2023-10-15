@@ -105,6 +105,7 @@ The features that are expected in the upcoming releases:
 - [x] Allow serving static files via CLI
 - [x] Describe examples in Wiki
 - [ ] Support for TLS
+- [ ] Support for file uploading
 - [ ] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for WebSockets
 - [ ] Better compatibility with `svelte-adapter-deno`
