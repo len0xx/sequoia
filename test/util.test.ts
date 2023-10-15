@@ -4,100 +4,109 @@
 
 import { HTTPHandler } from '../middleware.ts'
 import { HTTPResponse } from '../mod.ts'
-import { combineHeaders, convertToBody, defineContentType, extractParams, isRegExp, normalizePath, parseCookies, splitPath } from '../util.ts'
-import { assertEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts' 
+import {
+    combineHeaders,
+    convertToBody,
+    defineContentType,
+    extractParams,
+    isRegExp,
+    normalizePath,
+    parseCookies,
+    splitPath,
+} from '../util.ts'
+import { assertEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts'
 
 Deno.test('defineContentType', async (t) => {
     await t.step('image/jpeg', () => {
         const content = defineContentType('name.jpg')
         assertEquals(content, 'image/jpeg')
     })
-    
+
     await t.step('image/png', () => {
         const content = defineContentType('name.png')
         assertEquals(content, 'image/png')
     })
-    
+
     await t.step('image/webp', () => {
         const content = defineContentType('name.webp')
         assertEquals(content, 'image/webp')
     })
-    
+
     await t.step('image/svg+xml', () => {
         const content = defineContentType('name.svg')
         assertEquals(content, 'image/svg+xml')
     })
-    
+
     await t.step('image/gif', () => {
         const content = defineContentType('name.gif')
         assertEquals(content, 'image/gif')
     })
-    
+
     await t.step('video/mpeg', () => {
         const content = defineContentType('name.mpeg')
         assertEquals(content, 'video/mpeg')
     })
-    
+
     await t.step('video/mp4', () => {
         const content = defineContentType('name.mp4')
         assertEquals(content, 'video/mp4')
     })
-    
+
     await t.step('video/webm', () => {
         const content = defineContentType('name.webm')
         assertEquals(content, 'video/webm')
     })
-    
+
     await t.step('application/json', () => {
         const content = defineContentType('name.json')
         assertEquals(content, 'application/json; charset=UTF-8')
     })
-    
+
     await t.step('application/javascript', () => {
         const content = defineContentType('name.js')
         assertEquals(content, 'application/javascript; charset=UTF-8')
     })
-    
+
     await t.step('application/pdf', () => {
         const content = defineContentType('name.pdf')
         assertEquals(content, 'application/pdf')
     })
-    
+
     await t.step('application/php', () => {
         const content = defineContentType('name.php')
         assertEquals(content, 'application/x-httpd-php')
     })
-    
+
     await t.step('application/xml', () => {
         const content = defineContentType('name.xml')
         assertEquals(content, 'application/xml')
     })
-    
+
     await t.step('application/zip', () => {
         const content = defineContentType('name.zip')
         assertEquals(content, 'application/zip')
     })
-    
+
     await t.step('audio/mpeg', () => {
         const content = defineContentType('name.mp3')
         assertEquals(content, 'audio/mpeg')
     })
-    
+
     await t.step('audio/ogg', () => {
         const content = defineContentType('name.ogg')
         assertEquals(content, 'audio/ogg')
     })
-    
+
     await t.step('text/plain', () => {
         const content = defineContentType('name.txt')
         assertEquals(content, 'text/plain; charset=UTF-8')
     })
-    
+
     await t.step('text/css', () => {
         const content = defineContentType('name.css')
         assertEquals(content, 'text/css; charset=UTF-8')
     })
-    
+
     await t.step('text/html', () => {
         const content = defineContentType('name.html')
         assertEquals(content, 'text/html; charset=UTF-8')
@@ -180,13 +189,13 @@ Deno.test('splitPath', async (t) => {
     await t.step('default', () => {
         const source = '/foo/bar/baz'
         const result = splitPath(source)
-        assertEquals(result, [ 'foo', 'bar', 'baz' ])
+        assertEquals(result, ['foo', 'bar', 'baz'])
     })
 
     await t.step('skip empty segments', () => {
         const source = '/foo///bar/baz'
         const result = splitPath(source)
-        assertEquals(result, [ 'foo', 'bar', 'baz' ])
+        assertEquals(result, ['foo', 'bar', 'baz'])
     })
 })
 
@@ -202,7 +211,7 @@ Deno.test('parseCookies', async (t) => {
         const result = parseCookies(source)
         const cookies = {
             token: 'AyshjSyc',
-            example: 'SbhSDydj2'
+            example: 'SbhSDydj2',
         }
         assertEquals(result, cookies)
     })
@@ -233,7 +242,7 @@ Deno.test('extractParams', async (t) => {
         root: '/',
         methods: ['GET'],
         middleware: () => new HTTPResponse('Test'),
-        static: false
+        static: false,
     }
 
     await t.step('single param', () => {
