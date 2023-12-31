@@ -76,10 +76,12 @@ export function combineMiddlewares(
 
             if (response) {
                 const headers = [
+                    response.headers,
                     handler.options?.headers,
                     context.response.headers,
-                    response.headers,
-                ].filter((entry) => entry && entry instanceof Headers) as Headers[]
+                ].filter(
+                    (entry) => entry && entry instanceof Headers && Array.from(entry.keys()).length
+                ) as Headers[]
 
                 context.response.body = response.body
                 context.response.headers = combineHeaders(...headers)
