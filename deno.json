@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "lint:fmt": "deno lint --ignore=examples && deno fmt --ignore=examples,README.md,README-ru.md",
+        "lint:fmt": "deno lint && deno fmt",
         "test": "deno test test",
         "check": "deno task lint:fmt",
         "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
@@ -13,6 +13,7 @@
         "sveltekit": "deno run --allow-net=127.0.0.1:8000 --allow-read=examples/sveltekit --watch examples/sveltekit.ts"
     },
     "lint": {
+        "exclude": ["examples"],
         "rules": {
             "tags": ["recommended"],
             "include": [
@@ -35,18 +36,17 @@
         }
     },
     "fmt": {
-        "files": {
-            "exclude": [
-                "LICENSE.md"
-            ]
-        },
-        "options": {
-            "semiColons": false,
-            "singleQuote": true,
-            "useTabs": false,
-            "indentWidth": 4,
-            "lineWidth": 100,
-            "proseWrap": "always"
-        }
+        "exclude": [
+            "examples",
+            "LICENSE.md",
+            "README-ru.md",
+            "README.md"
+        ],
+        "semiColons": false,
+        "singleQuote": true,
+        "useTabs": false,
+        "indentWidth": 4,
+        "lineWidth": 100,
+        "proseWrap": "always"
     }
 }
