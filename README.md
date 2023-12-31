@@ -109,6 +109,8 @@ The features that are expected in the upcoming releases:
 - [ ] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for WebSockets
 - [ ] Better compatibility with `svelte-adapter-deno`
-- [ ] Support for compression and other HTTP headers
+- [ ] Support for compression headers
+- [ ] Support for CORS headers
 - [ ] Better documentation on `deno.land`
 - [ ] Host the library outside of `deno.land`
+- [ ] Implement an easy-to-use and highly configurable class for static file serving
