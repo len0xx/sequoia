@@ -66,13 +66,6 @@ export class HTTPResponse {
         if (this.headers) {
             for (const [key, val] of this.headers.entries()) {
                 if (typeof val === 'string' && val) {
-                    if (key.startsWith('Access-Control') && headers.has(key)) {
-                        if (headers.get(key) === '*') {
-                            continue
-                        } else if (val === '*') {
-                            headers.set(key, '*')
-                        }
-                    }
                     headers.append(key, val)
                 }
             }
