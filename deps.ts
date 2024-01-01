@@ -1,5 +1,6 @@
 // Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
 
+export { isWindows } from 'https://deno.land/std@0.177.0/_util/os.ts'
 export * as stdPath from 'https://deno.land/std@0.177.0/path/mod.ts'
 export * as mediaTypes from 'https://deno.land/std@0.177.0/media_types/mod.ts'
 export * from 'https://deno.land/std@0.177.0/testing/asserts.ts'

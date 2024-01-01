@@ -4,7 +4,7 @@ import { HTTPError } from './error.ts'
 import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus, isError } from './status.ts'
-import { match, mediaTypes, type Path, Status, stdPath } from './deps.ts'
+import { match, mediaTypes, type Path, Status, stdPath, isWindows } from './deps.ts'
 import type { RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -18,11 +18,16 @@ export function defineContentType(filename: string): string | undefined {
     return mediaTypes.contentType(ext)
 }
 
-export function normalizePath(path: RoutePath): RoutePath {
+export const WINDOWS_DELIMETER_SYMBOL = '\\'
+export const UNIX_DELIMETER_SYMBOL = '/'
+export const DELIMETER_SYMBOL = isWindows ? WINDOWS_DELIMETER_SYMBOL : UNIX_DELIMETER_SYMBOL
+
+export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
+        const delimeter = osSpecific ? DELIMETER_SYMBOL : UNIX_DELIMETER_SYMBOL
         path = stdPath.normalize(path)
-        path = path.endsWith('/') ? path.slice(0, path.length - 1) : path
-        return !path.startsWith('/') ? '/' + path : path
+        path = path.endsWith(delimeter) ? path.slice(0, path.length - 1) : path
+        return !path.startsWith(delimeter) ? delimeter + path : path
     }
     return path
 }

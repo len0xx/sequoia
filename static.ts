@@ -45,13 +45,13 @@ export async function serveStatic(url: URL, path: string, dir: string): Promise<
     const relativePath = url.pathname.replace(normalizePath(path), '')
 
     if (filename) {
-        const filepath = stdPath.posix.join(stdPath.normalize(dir), relativePath)
+        const filepath = stdPath.join(stdPath.normalize(dir), relativePath)
         let response: HTTPResponse | undefined = undefined
         try {
             if (await fileExists(filepath)) {
                 response = await serveFile(filepath)
-            } else if (await fileExists(stdPath.posix.join(filepath, `/${INDEX_FILENAME}`))) {
-                response = await serveFile(stdPath.posix.join(filepath, `/${INDEX_FILENAME}`))
+            } else if (await fileExists(stdPath.join(filepath, `${INDEX_FILENAME}`))) {
+                response = await serveFile(stdPath.join(filepath, `${INDEX_FILENAME}`))
             }
 
             if (!response) {

@@ -14,6 +14,7 @@ import {
     parseCookies,
     splitPath,
 } from '../util.ts'
+import { isWindows } from '../deps.ts'
 import { assertEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts'
 
 Deno.test('defineContentType', async (t) => {
@@ -117,13 +118,15 @@ Deno.test('Normalize path', async (t) => {
     await t.step('Remove trailing slash', () => {
         const source = '/foo/bar/'
         const result = normalizePath(source)
-        assertEquals(result, '/foo/bar')
+        const expected = isWindows ? '\\foo\\bar' : '/foo/bar'
+        assertEquals(result, expected)
     })
 
     await t.step('Append leading slash', () => {
         const source = 'foo/bar'
         const result = normalizePath(source)
-        assertEquals(result, '/foo/bar')
+        const expected = isWindows ? '\\foo\\bar' : '/foo/bar'
+        assertEquals(result, expected)
     })
 })
 
