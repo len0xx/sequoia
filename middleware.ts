@@ -80,7 +80,7 @@ export function combineMiddlewares(
                     handler.options?.headers,
                     context.response.headers,
                 ].filter(
-                    (entry) => entry && entry instanceof Headers && Array.from(entry.keys()).length
+                    (entry) => entry && entry instanceof Headers && Array.from(entry.keys()).length,
                 ) as Headers[]
 
                 context.response.body = response.body
