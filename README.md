@@ -104,13 +104,13 @@ The features that are expected in the upcoming releases:
 
 - [x] Allow serving static files via CLI
 - [x] Describe examples in Wiki
+- [x] Support for CORS headers
 - [ ] Support for TLS
 - [ ] Support for file uploading
 - [ ] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for WebSockets
 - [ ] Better compatibility with `svelte-adapter-deno`
 - [ ] Support for compression headers
-- [ ] Support for CORS headers
 - [ ] Better documentation on `deno.land`
 - [ ] Host the library outside of `deno.land`
 - [ ] Implement an easy-to-use and highly configurable class for static file serving
