@@ -4,7 +4,7 @@ import { HTTPError } from './error.ts'
 import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus, isError } from './status.ts'
-import { match, mediaTypes, type Path, Status, stdPath, isWindows } from './deps.ts'
+import { isWindows, match, mediaTypes, type Path, Status, stdPath } from './deps.ts'
 import type { RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
