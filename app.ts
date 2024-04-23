@@ -50,7 +50,6 @@ export class Application {
     #configuration: AppConfiguration
     #serverConfiguration = SERVER_CONFIG
     #listening = false
-    #listener: Deno.Listener | undefined
     #handleError = defaultErrorHandler
     readonly #handlers: HTTPHandler[] = []
 
@@ -80,7 +79,9 @@ export class Application {
                     methods: [],
                 } as HTTPHandler)
             } else {
-                throw new SequoiaError('Only functions may be passed to this method as middlwares')
+                throw new SequoiaError(
+                    'Only functions may be passed to this method as middlwares',
+                )
             }
         }
     }
@@ -92,13 +93,16 @@ export class Application {
         if (pathOrRouter && pathOrRouter instanceof Router) {
             this.#handlers.push(...pathOrRouter.getHandlers())
         } else if (
-            pathOrRouter && router && typeof pathOrRouter === 'string' && router instanceof Router
+            pathOrRouter &&
+            router &&
+            typeof pathOrRouter === 'string' &&
+            router instanceof Router
         ) {
             const root = normalizePath(pathOrRouter)
             this.#handlers.push(
-                ...router.getHandlers().map(
-                    (handler) => ({ ...handler, root } as HTTPHandler),
-                ),
+                ...router
+                    .getHandlers()
+                    .map((handler) => ({ ...handler, root }) as HTTPHandler),
             )
         } else {
             throw new SequoiaError(
@@ -111,10 +115,14 @@ export class Application {
         this.#handleError = handler
     }
 
-    protected checkHandler = (handler: HTTPHandler, path: string, method: string): boolean => {
+    protected checkHandler = (
+        handler: HTTPHandler,
+        path: string,
+        method: string,
+    ): boolean => {
         const relativePath = handler.root === '/'
             ? path
-            : normalizePath(path.split(handler.root)[1] || '/') as string
+            : (normalizePath(path.split(handler.root)[1] || '/') as string)
 
         if (
             (handler.methods.includes(method) || handler.methods.length === 0) &&
@@ -124,9 +132,11 @@ export class Application {
                 return handler.path.test(relativePath)
             } else if (
                 handler.path === '*' ||
-                path === handler.path && path === '/' ||
-                handler.static && path.startsWith(handler.path)
-            ) return true
+                (path === handler.path && path === '/') ||
+                (handler.static && path.startsWith(handler.path))
+            ) {
+                return true
+            }
 
             const match = createMatcher(handler.path)
             return Boolean(match(relativePath))
@@ -135,18 +145,20 @@ export class Application {
     }
 
     protected matchHandlers = (request: Request): HTTPHandler[] => {
-        return this.#handlers.filter(
-            (handler) =>
-                this.checkHandler(
-                    handler,
-                    new URL(request.url).pathname,
-                    request.method.toUpperCase(),
-                ),
+        return this.#handlers.filter((handler) =>
+            this.checkHandler(
+                handler,
+                new URL(request.url).pathname,
+                request.method.toUpperCase(),
+            )
         )
     }
 
-    protected handle = async (request: Request, connection: Deno.Conn): Promise<Response> => {
-        const remote = getRemoteAddress(connection)
+    protected handle = async (
+        request: Request,
+        info: Deno.ServeHandlerInfo,
+    ): Promise<Response> => {
+        const remote = getRemoteAddress(info)
         this.log('Request', `[${remote.hostname}]:`, request.method, request.url)
 
         if (this.#handlers.length) {
@@ -155,7 +167,11 @@ export class Application {
             if (handlers.length) {
                 const context = new Context(request)
                 const path = new URL(request.url).pathname
-                const middleware = combineMiddlewares(path, handlers, this.#handleError)
+                const middleware = combineMiddlewares(
+                    path,
+                    handlers,
+                    this.#handleError,
+                )
 
                 const response = (await middleware(context)) as HTTPResponse
                 response.applyCookies(context.cookies)
@@ -173,27 +189,27 @@ export class Application {
         throw new SequoiaError('No listeners are defined for the application')
     }
 
-    protected handleHTTP = async (conn: Deno.Conn): Promise<void> => {
-        for await (const event of Deno.serveHttp(conn)) {
-            let response: Response | undefined
+    protected handleHTTP = async (
+        request: Request,
+        info: Deno.ServeHandlerInfo,
+    ): Promise<Response> => {
+        let response: Response | null = null
 
-            try {
-                response = await this.handle(event.request, conn)
-            } catch (error) {
-                console.error(error)
-                const res = error500
-                response = res.transform()
-                this.log(responseLog(res))
-            } finally {
-                await event.respondWith(response!)
-            }
+        try {
+            response = await this.handle(request, info)
+        } catch (error) {
+            console.error(error)
+            this.log(responseLog(error500))
+            response = error500.transform()
         }
+
+        return response as Response
     }
 
-    public listen = async (
+    public listen = (
         configuration: Partial<ServerConfiguration> = SERVER_CONFIG,
         callback?: () => void,
-    ): Promise<void> => {
+    ): void => {
         if (!this.#listening) {
             this.#serverConfiguration = {
                 ...SERVER_CONFIG,
@@ -201,35 +217,23 @@ export class Application {
             }
             const config = this.#serverConfiguration
 
-            this.#listener = Deno.listen(config)
             this.#listening = true
             this.log(
                 `Starting an HTTP server at http://${config.hostname}:${config.port}`,
             )
-            if (callback) callback()
 
-            if (config.signal) {
-                config.signal.addEventListener('abort', () => {
-                    this.close()
-                })
+            const serveOptions: Deno.ServeOptions = {
+                hostname: config.hostname,
+                port: config.port,
+                signal: config.signal,
+                onListen: callback,
             }
 
-            for await (const conn of this.#listener) {
-                this.handleHTTP(conn)
-            }
+            Deno.serve(serveOptions, this.handleHTTP)
         } else {
             throw new SequoiaError(
                 'Can not start listening because this instance is already listening!',
             )
-        }
-    }
-
-    public close = (): void => {
-        if (this.#listener && this.#listening) {
-            this.#listener.close()
-            this.#listening = false
-        } else {
-            throw new SequoiaError('The application is not listening yet')
         }
     }
 

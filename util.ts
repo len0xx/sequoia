@@ -11,7 +11,9 @@ export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] }
 
-export type IterableRecord<T> = Record<string, T> & Iterable<readonly [string, T]>
+export type IterableRecord<T> =
+    & Record<string, T>
+    & Iterable<readonly [string, T]>
 
 export function defineContentType(filename: string): string | undefined {
     const ext = stdPath.extname(filename)
@@ -34,12 +36,15 @@ export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {
 
 export function convertToBody<T>(input: T): BodyInit {
     if (
-        input instanceof Blob || input instanceof FormData || input instanceof URLSearchParams ||
-        input instanceof ReadableStream || typeof input === 'string'
+        input instanceof Blob ||
+        input instanceof FormData ||
+        input instanceof URLSearchParams ||
+        input instanceof ReadableStream ||
+        typeof input === 'string'
     ) {
         return input as BodyInit
     } else {
-        return input ? (typeof input === 'object' ? JSON.stringify(input) : input.toString()) : ''
+        return input ? typeof input === 'object' ? JSON.stringify(input) : input.toString() : ''
     }
 }
 
@@ -76,7 +81,10 @@ export function HTMLErrorTemplate(error: HTTPError): string {
 }
 
 export function parseCookies(input: string): Record<string, string> {
-    const inputArr = input.split(';').filter(Boolean).map((entry) => entry.trim())
+    const inputArr = input
+        .split(';')
+        .filter(Boolean)
+        .map((entry) => entry.trim())
     const result: Record<string, string> = {}
     for (const val of inputArr) {
         const cur = val.split('=')
@@ -85,7 +93,9 @@ export function parseCookies(input: string): Record<string, string> {
     return result
 }
 
-export function getIterableRecord<T>(src: Record<string, T>): IterableRecord<T> {
+export function getIterableRecord<T>(
+    src: Record<string, T>,
+): IterableRecord<T> {
     return {
         ...src,
         [Symbol.iterator]() {
@@ -109,15 +119,8 @@ export function getIterableRecord<T>(src: Record<string, T>): IterableRecord<T> 
     } as IterableRecord<T>
 }
 
-export function assertIsNetAddr(addr: Deno.Addr): asserts addr is Deno.NetAddr {
-    if (!['tcp', 'udp'].includes(addr.transport)) {
-        throw new TypeError('Not a network address')
-    }
-}
-
-export function getRemoteAddress(connection: Deno.Conn): Deno.NetAddr {
-    assertIsNetAddr(connection.remoteAddr)
-    return connection.remoteAddr
+export function getRemoteAddress(info: Deno.ServeHandlerInfo): Deno.NetAddr {
+    return info.remoteAddr
 }
 
 export function redirect(
@@ -172,14 +175,12 @@ export function outputHandlers(
     }
 }
 
-export function extractParams(handler: HTTPHandler, path: string): Record<string, string> {
+export function extractParams(
+    handler: HTTPHandler,
+    path: string,
+): Record<string, string> {
     const match = handler.path !== '*' ? createMatcher(handler.path) : (_: string) => false
-    return (
-            !(isRegExp(handler.path) ||
-                handler.static)
-        )
-        ? (match(path) as MatchSuccess).params
-        : {}
+    return !(isRegExp(handler.path) || handler.static) ? (match(path) as MatchSuccess).params : {}
 }
 
 export function responseLog(response: HTTPResponse): string {
