@@ -46,7 +46,7 @@ In Sequoia there is an `HTTPResponse` class which stands in-between the develope
 
 ### Prerequisites
 
-To use this library you obviously need Deno (`v1.30.3` or later) to be install on your machine. Check out the [installation guide](https://deno.land/manual@v1.30.3/getting_started/installation)
+To use this library you obviously need Deno (`v1.35.0` or later) to be install on your machine. Check out the [installation guide](https://deno.land/manual@v1.30.3/getting_started/installation)
 
 ### Getting started
 
