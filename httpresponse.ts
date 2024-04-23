@@ -73,7 +73,7 @@ export class HTTPResponse {
 
         if (this.type) headers.set('Content-Type', this.type)
 
-        return new Response(body, { status: status, headers: headers })
+        return new Response(body, { status, headers })
     }
 
     empty = (): boolean => {

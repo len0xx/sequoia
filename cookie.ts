@@ -12,21 +12,27 @@ export interface CookiesOptions {
     overwrite?: boolean
 }
 
-export function recordToStorage(src: Record<string, string>, options: CookiesOptions = {}) {
-    return Object.entries(src).map(
-        (entry) => [entry[0], new Cookie(entry[0], entry[1], options)],
-    ) as [
-        string,
-        Cookie,
-    ][]
+export function recordToStorage(
+    src: Record<string, string>,
+    options: CookiesOptions = {},
+) {
+    return Object.entries(src).map((entry) => [
+        entry[0],
+        new Cookie(entry[0], entry[1], options),
+    ]) as [string, Cookie][]
 }
 
 export class CookieStorage {
     readonly #storage: Map<string, Cookie>
 
-    constructor(src?: Record<string, string> | undefined, options?: CookiesOptions) {
+    constructor(
+        src?: Record<string, string> | undefined,
+        options?: CookiesOptions,
+    ) {
         this.#storage = src
-            ? new Map<string, Cookie>(recordToStorage(src, options ?? { overwrite: false }))
+            ? new Map<string, Cookie>(
+                recordToStorage(src, options ?? { overwrite: false }),
+            )
             : new Map()
     }
 
@@ -38,10 +44,7 @@ export class CookieStorage {
         const cookie = this.#storage.get(name)
 
         if (cookie) {
-            this.#storage.set(
-                name,
-                new Cookie(name, null, { path: cookie.path }),
-            )
+            this.#storage.set(name, new Cookie(name, null, { path: cookie.path }))
         }
     }
 
