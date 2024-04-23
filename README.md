@@ -28,7 +28,7 @@ Sequoia on the other hand provides you a better way to do this:
 // Sequoia
 app.GET('/', (ctx) => {
     const body = { ok: true, user: { id: 1, name: 'John Doe' } }
-    ctx.cookies.set('access_token', 'Bearer a62bc1')
+    ctx.cookies.set('access_token', 'a62bc1')
 
     return new HTTPResponse({
         status: HTTPStatus.CREATED,
@@ -105,6 +105,7 @@ The features that are expected in the upcoming releases:
 - [x] Allow serving static files via CLI
 - [x] Describe examples in Wiki
 - [x] Support for CORS headers
+- [x] Upgrade to `Deno.serve()`
 - [ ] Support for TLS
 - [ ] Support for file uploading
 - [ ] Unit tests and CI/CD through GitHub Actions

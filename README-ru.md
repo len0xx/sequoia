@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 // Sequoia
 app.GET('/', (ctx) => {
     const body = { ok: true, user: { id: 1, name: 'John Doe' } }
-    ctx.cookies.set('access_token', 'Bearer a62bc1')
+    ctx.cookies.set('access_token', 'a62bc1')
 
     return new HTTPResponse({
         status: HTTPStatus.CREATED,
@@ -112,6 +112,7 @@ app.listen(
 - [x] Возможность раздавать статические файлы с помощью CLI команды
 - [x] Описать примеры использования библиотеки в GitHub Wiki
 - [x] Поддержка HTTP CORS заголовков
+- [x] Обновить внутренний API до `Deno.serve()`
 - [ ] Поддержка TLS
 - [ ] Поддержка загрузки файлов
 - [ ] Модульные тесты и CI/CD с помощью GitHub Actions
