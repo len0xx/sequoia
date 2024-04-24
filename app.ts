@@ -158,8 +158,9 @@ export class Application {
         request: Request,
         info: Deno.ServeHandlerInfo,
     ): Promise<Response> => {
+        const loggingEnabled = this.#configuration.logging && this.#configuration.logger
         const remote = getRemoteAddress(info)
-        this.log('Request', `[${remote.hostname}]:`, request.method, request.url)
+        if (loggingEnabled) this.log('Request', `[${remote.hostname}]:`, request.method, request.url)
 
         if (this.#handlers.length) {
             const handlers = this.matchHandlers(request)
@@ -176,14 +177,16 @@ export class Application {
                 const response = (await middleware(context)) as HTTPResponse
                 response.applyCookies(context.cookies)
 
-                this.log('Matched handlers:')
-                this.dir(handlers.map(outputHandlers))
-                this.log(responseLog(response))
+                if (loggingEnabled) {
+                    this.log('Matched handlers:')
+                    this.dir(handlers.map(outputHandlers))
+                    this.log(responseLog(response))
+                }
 
                 if (!response.empty()) return response.transform()
             }
             const response = error404
-            this.log(responseLog(response))
+            if (loggingEnabled) this.log(responseLog(response))
             return response.transform()
         }
         throw new SequoiaError('No listeners are defined for the application')
@@ -193,13 +196,14 @@ export class Application {
         request: Request,
         info: Deno.ServeHandlerInfo,
     ): Promise<Response> => {
+        const loggingEnabled = this.#configuration.logging && this.#configuration.logger
         let response: Response | null = null
 
         try {
             response = await this.handle(request, info)
         } catch (error) {
             console.error(error)
-            this.log(responseLog(error500))
+            if (loggingEnabled) this.log(responseLog(error500))
             response = error500.transform()
         }
 
@@ -211,6 +215,7 @@ export class Application {
         callback?: () => void,
     ): void => {
         if (!this.#listening) {
+            const loggingEnabled = this.#configuration.logging && this.#configuration.logger
             this.#serverConfiguration = {
                 ...SERVER_CONFIG,
                 ...configuration,
@@ -218,7 +223,7 @@ export class Application {
             const config = this.#serverConfiguration
 
             this.#listening = true
-            this.log(
+            if (loggingEnabled) this.log(
                 `Starting an HTTP server at http://${config.hostname}:${config.port}`,
             )
 
@@ -247,17 +252,15 @@ export class Application {
         const date = new Date().toLocaleDateString('ru', options)
         const config = this.#configuration
 
-        if (config.logging && config.logger) {
-            if (config.date) {
-                config.logger(date, ':', ...data)
-            } else {
-                config.logger(...data)
-            }
+        if (config.date) {
+            config.logger(date, ':', ...data)
+        } else {
+            config.logger(...data)
         }
     }
 
     // deno-lint-ignore no-explicit-any
     protected dir = (item: any, options?: any): void => {
-        if (this.#configuration.logging) console.dir(item, options)
+        console.dir(item, options)
     }
 }
