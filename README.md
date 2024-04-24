@@ -17,11 +17,11 @@ Moving to the examples, if you've ever developed an API in `Node.js` or `Deno`, 
 // express.js
 app.get('/', (req, res) => {
     const body = { ok: true, user: { id: 1, name: 'John Doe' } }
-    res.status(201).json(body).cookie('access_token', 'Bearer a62bc1')
+    res.status(201).json(body).cookie('access_token', 'a62bc1')
 })
 ```
 
-A chain of methods like this `res.status(201).json(body).cookie('access_token', 'Bearer a62bc1')` is not a great example of Developer Experience
+A chain of methods like this `res.status(201).json(body).cookie('access_token', 'a62bc1')` is not a great example of Developer Experience
 
 Sequoia on the other hand provides you a better way to do this:
 ```javascript

@@ -17,11 +17,11 @@
 // express.js
 app.get('/', (req, res) => {
     const body = { ok: true, user: { id: 1, name: 'John Doe' } }
-    res.status(201).json(body).cookie('access_token', 'Bearer a62bc1')
+    res.status(201).json(body).cookie('access_token', 'a62bc1')
 })
 ```
 
-Цепочка вызовов `res.status(201).json(body).cookie('access_token', 'Bearer a62bc1')` это не лучший способ описания того, что делает этот код
+Цепочка вызовов `res.status(201).json(body).cookie('access_token', 'a62bc1')` это не лучший способ описания того, что делает этот код
 
 `Sequoia` же даёт возможность описать этот код более декларативно:
 ```javascript
