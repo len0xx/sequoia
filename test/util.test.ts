@@ -15,7 +15,7 @@ import {
     splitPath,
 } from '../util.ts'
 import { isWindows } from '../deps.ts'
-import { assertEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts'
+import { assertEquals, assertStrictEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts'
 
 Deno.test('defineContentType', async (t) => {
     await t.step('image/jpeg', () => {
@@ -218,6 +218,17 @@ Deno.test('parseCookies', async (t) => {
         }
         assertEquals(result, cookies)
     })
+
+    // await t.step("more complex example", () => {
+    //   const source =
+    //     "_gh_sess=m6ijJxCu3UHndM4%2Fv1ajMUInK9W0DsonfCb0a%2BHodf8dHWcBdBryG1HaWES4wJJ1VDQvE%2Fss2m9NJgR2ryjBIRZrfqKvgxylyhuy4oifH3kCaNtguTuEB4TYoSN3sJA%2BdyzBqvnkM%2Fa2gXf63XDPjMEE9sn38sOWPmcAaO%2F4PkAbxvWGlTTqAp82REqUKTFqfPJ9AidoHih2GQKXtX%2Bb36lhhdJpoNbuLwA1sxVep0R05SV8Ll5zL43QkNoZT7udm%2BrGJmIYvoHkTcsqSyTbeOWqcbCqnW8UuDrdKGbC7L3%2BQm%2Ba3My6Pi1WtO6DqCM0QIQypQ9oX0veH6S99oqLUPRmZ7QxXX%2FJyeFxMx0GM0CrfrfxAoSBCxZqr3HNp7qW9ibSBrynFRKbAjtVUqGvzNCtBHsbo1IC8zHxSBrPxJSGudbDDuco6vpauFKy8xRNpCFh8qXam09ra1CCQB6gozOci7JL2w4PX…guKz9I2%2FeaJ%2FA05LyEjRRPegavkqIXp0SQVboiT3JIUIM20JvnqSf2rmayMVqdgU39ALbGGk23JYSKeGOfiG%2FGkSlwyRwWk014PnEkmYlkhKnMqgDFgjvXb2Ka%2FVDP%2FFqtirGR46Zx6mOgUIYEHw9HuhlI1OOSpBHeV8%2F4HfkIfk3oZaiDtxdXumZTuEcOOWWxOrnAgcHENtdbz463uHS%2F0SJMXL%2FzQXtwQlIOrm6jPeBSNeD4hnElqSD8JtRS645%2BOxdmnga13c2p%2B0YKb5r59u5A3OOMJaaZYdbTa%2FsFCrrO0MH55Sj0LeHjgWCQVmPrRz%2F2BdlIl520XIEHxH%2B7jfLQYRIZVNh04gxcVaRe40B53Hu5v%2FhIcBTsB%2Btzn1w%3D%3D--ckpi2CLiJX5lI%2FsL--gTdeH2ACm7W3wX1jKNIdrQ%3D%3D; path=/; secure; HttpOnly; SameSite=Lax;has_recent_activity=1; path=/; expires=Tue, 02 Jan 2024 08:01:19 GMT; secure; HttpOnly; SameSite=Lax";
+    //   const result = parseCookies(source);
+    //   const cookies = {
+    //     token: "AyshjSyc",
+    //     example: "SbhSDydj2",
+    //   };
+    //   assertEquals(result, cookies);
+    // });
 })
 
 Deno.test('combineHeaders', async (t) => {
@@ -277,9 +288,36 @@ Deno.test('extractParams', async (t) => {
 
     await t.step('only numeric param', () => {
         handler.path = '/:number(\\d+)'
-        const result = extractParams(handler, '/1024')
+        let result = extractParams(handler, '/1024')
         assertEquals(result.number, '1024')
+        result = extractParams(handler, '/NaN')
+        assertStrictEquals(result, undefined)
     })
 
-    // TODO: Add more tests
+    await t.step('only specific words param', () => {
+        handler.path = '/:foo(sequoia|and|deno|are|awesome)'
+        let result = extractParams(handler, '/sequoia')
+        assertEquals(result.foo, 'sequoia')
+        result = extractParams(handler, '/and')
+        assertEquals(result.foo, 'and')
+        result = extractParams(handler, '/deno')
+        assertEquals(result.foo, 'deno')
+        result = extractParams(handler, '/are')
+        assertEquals(result.foo, 'are')
+        result = extractParams(handler, '/awesome')
+        assertEquals(result.foo, 'awesome')
+    })
+
+    await t.step('chained optional params', () => {
+        handler.path = '/example-:foo{-:bar}?{-:baz}?'
+        let result = extractParams(handler, '/example-123')
+        assertEquals(result.foo, '123')
+        result = extractParams(handler, '/example-123-name')
+        assertEquals(result.foo, '123')
+        assertEquals(result.bar, 'name')
+        result = extractParams(handler, '/example-123-name-path')
+        assertEquals(result.foo, '123')
+        assertEquals(result.bar, 'name')
+        assertEquals(result.baz, 'path')
+    })
 })
