@@ -1,4 +1,4 @@
-// Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
+// Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
 import { Status } from './deps.ts'
 import { Context } from './context.ts'

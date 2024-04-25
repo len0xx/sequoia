@@ -1,4 +1,4 @@
-// Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
+// Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
 export { isWindows } from 'https://deno.land/std@0.177.0/_util/os.ts'
 export * as stdPath from 'https://deno.land/std@0.177.0/path/mod.ts'
