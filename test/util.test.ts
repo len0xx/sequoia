@@ -15,7 +15,11 @@ import {
     splitPath,
 } from '../util.ts'
 import { isWindows } from '../deps.ts'
-import { assertEquals, assertStrictEquals, assertInstanceOf } from 'https://deno.land/std@0.204.0/assert/mod.ts'
+import {
+    assertEquals,
+    assertInstanceOf,
+    assertStrictEquals,
+} from 'https://deno.land/std@0.204.0/assert/mod.ts'
 
 Deno.test('defineContentType', async (t) => {
     await t.step('image/jpeg', () => {
