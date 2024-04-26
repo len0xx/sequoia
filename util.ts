@@ -4,7 +4,7 @@ import { HTTPError } from './error.ts'
 import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus } from './status.ts'
-import { isErrorStatus, match, mediaTypes, type Path, stdPath, normalizePosix } from './deps.ts'
+import { isErrorStatus, match, mediaTypes, normalizePosix, type Path, stdPath } from './deps.ts'
 import type { RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -38,8 +38,7 @@ export function sanitizePath(path: RoutePath): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
         const segments = splitPath(path).filter(eliminateIncorrectPathSegments)
         return segments.join('/')
-    }
-    else return path
+    } else return path
 }
 
 export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {

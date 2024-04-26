@@ -13,12 +13,7 @@ import {
     normalizePath,
     splitPath,
 } from '../util.ts'
-import {
-    isWindows,
-    assertEquals,
-    assertInstanceOf,
-    assertStrictEquals,
-} from '../deps.ts'
+import { assertEquals, assertInstanceOf, assertStrictEquals, isWindows } from '../deps.ts'
 
 Deno.test('defineContentType', async (t) => {
     await t.step('image/jpeg', () => {
