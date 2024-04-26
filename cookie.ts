@@ -1,6 +1,6 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
-export interface CookiesOptions {
+export interface CookieOptions {
     domain?: string
     path?: string
     expires?: Date
@@ -14,7 +14,7 @@ export interface CookiesOptions {
 
 export function recordToStorage(
     src: Record<string, string>,
-    options: CookiesOptions = {},
+    options: CookieOptions = {},
 ) {
     return Object.entries(src).map((entry) => [
         entry[0],
@@ -22,39 +22,17 @@ export function recordToStorage(
     ]) as [string, Cookie][]
 }
 
-export class CookieStorage {
-    readonly #storage: Map<string, Cookie>
-
-    constructor(
-        src?: Record<string, string> | undefined,
-        options?: CookiesOptions,
-    ) {
-        this.#storage = src
-            ? new Map<string, Cookie>(
-                recordToStorage(src, options ?? { overwrite: false }),
-            )
-            : new Map()
+export function parseCookies(input: string): Record<string, string> {
+    const inputArr = input
+        .split(';')
+        .filter(Boolean)
+        .map((entry) => entry.trim())
+    const result: Record<string, string> = {}
+    for (const val of inputArr) {
+        const cur = val.split('=')
+        result[cur[0]] = decodeURIComponent(cur[1])
     }
-
-    set = (name: string, value: string | null, options?: CookiesOptions) => {
-        this.#storage.set(name, new Cookie(name, value, options))
-    }
-
-    delete = (name: string) => {
-        const cookie = this.#storage.get(name)
-
-        if (cookie) {
-            this.#storage.set(name, new Cookie(name, null, { path: cookie.path }))
-        }
-    }
-
-    get = (name: string) => {
-        return this.#storage.get(name) || null
-    }
-
-    entries = () => Array.from(this.#storage.entries())
-
-    size = () => this.#storage.size
+    return result
 }
 
 export class Cookie {
@@ -70,7 +48,7 @@ export class Cookie {
     sameSite?: 'strict' | 'lax' | 'none' | boolean
     signed?: boolean
 
-    constructor(name: string, value: string | null, options?: CookiesOptions) {
+    constructor(name: string, value: string | null, options?: CookieOptions) {
         this.name = name
         this.value = value || null
         this.httpOnly = options?.httpOnly
@@ -101,4 +79,39 @@ export class Cookie {
             return `${this.name}=; Expires=${new Date(1970, 0, 1)}; Path=${this.path || '/'}`
         }
     }
+}
+
+export class CookieStorage {
+    readonly #storage: Map<string, Cookie>
+
+    constructor(
+        src?: Record<string, string> | undefined,
+        options?: CookieOptions,
+    ) {
+        this.#storage = src
+            ? new Map<string, Cookie>(
+                recordToStorage(src, options ?? { overwrite: false }),
+            )
+            : new Map()
+    }
+
+    set = (name: string, value: string | null, options?: CookieOptions) => {
+        this.#storage.set(name, new Cookie(name, value, options))
+    }
+
+    delete = (name: string) => {
+        const cookie = this.#storage.get(name)
+
+        if (cookie) {
+            this.#storage.set(name, new Cookie(name, null, { path: cookie.path }))
+        }
+    }
+
+    get = (name: string) => {
+        return this.#storage.get(name) || null
+    }
+
+    entries = () => Array.from(this.#storage.entries())
+
+    size = () => this.#storage.size
 }

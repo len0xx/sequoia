@@ -1,6 +1,5 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
-import { Status } from './deps.ts'
 import { HTTPStatus } from './status.ts'
 import { CookieStorage } from './cookie.ts'
 import { convertToBody, type Writeable } from './util.ts'
@@ -12,7 +11,7 @@ export interface HTTPResponseOptions {
     body: ResponseBody | ResponseBodyFunction
     headers?: Headers
     type?: string
-    status?: HTTPStatus | Status
+    status?: HTTPStatus
 }
 
 export type HTTPResponseInit =
@@ -24,7 +23,7 @@ export type HTTPResponseInit =
     | ResponseBodyFunction
     | HTTPResponseOptions
 
-export function isStatusNullBody(status: HTTPStatus | Status): boolean {
+export function isStatusNullBody(status: HTTPStatus): boolean {
     return (
         status === HTTPStatus.SWITCHING_PROTOCOLS ||
         status === HTTPStatus.NO_CONTENT ||
@@ -36,7 +35,7 @@ export function isStatusNullBody(status: HTTPStatus | Status): boolean {
 export class HTTPResponse {
     readonly body: ResponseBody = null
     readonly headers = new Headers()
-    readonly status: HTTPStatus | Status = HTTPStatus.SUCCESS
+    readonly status: HTTPStatus = HTTPStatus.SUCCESS
     readonly type?: string
 
     constructor(initializer: HTTPResponseInit) {

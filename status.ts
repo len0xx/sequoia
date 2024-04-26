@@ -1,7 +1,5 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
-import { Status } from './deps.ts'
-
 export enum HTTPStatus {
     // Information responses
     CONTINUE = 100,
@@ -74,24 +72,4 @@ export enum HTTPStatus {
     LOOP_DETECTED = 508,
     NOT_EXTENDED = 510,
     NETWORK_AUTH_FAILED = 511,
-}
-
-export function isSuccessful(status: HTTPStatus | Status): boolean {
-    return status >= 100 && status < 300
-}
-
-export function isRedirect(status: HTTPStatus | Status): boolean {
-    return status >= 300 && status < 400
-}
-
-export function isClientError(status: HTTPStatus | Status): boolean {
-    return status >= 400 && status < 500
-}
-
-export function isServerError(status: HTTPStatus | Status): boolean {
-    return status >= 500 && status < 600
-}
-
-export function isError(status: HTTPStatus | Status): boolean {
-    return isClientError(status) || isServerError(status)
 }

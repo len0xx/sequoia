@@ -3,8 +3,8 @@
 import { HTTPError } from './error.ts'
 import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
-import { HTTPStatus, isError } from './status.ts'
-import { isWindows, match, mediaTypes, type Path, Status, stdPath } from './deps.ts'
+import { HTTPStatus } from './status.ts'
+import { isErrorStatus, match, mediaTypes, type Path, stdPath } from './deps.ts'
 import type { RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -22,7 +22,7 @@ export function defineContentType(filename: string): string | undefined {
 
 export const WINDOWS_DELIMETER_SYMBOL = '\\'
 export const UNIX_DELIMETER_SYMBOL = '/'
-export const DELIMETER_SYMBOL = isWindows ? WINDOWS_DELIMETER_SYMBOL : UNIX_DELIMETER_SYMBOL
+export const DELIMETER_SYMBOL = stdPath.SEPARATOR
 
 export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
@@ -80,19 +80,6 @@ export function HTMLErrorTemplate(error: HTTPError): string {
     )
 }
 
-export function parseCookies(input: string): Record<string, string> {
-    const inputArr = input
-        .split(';')
-        .filter(Boolean)
-        .map((entry) => entry.trim())
-    const result: Record<string, string> = {}
-    for (const val of inputArr) {
-        const cur = val.split('=')
-        result[cur[0]] = cur[1]
-    }
-    return result
-}
-
 export function getIterableRecord<T>(
     src: Record<string, T>,
 ): IterableRecord<T> {
@@ -125,7 +112,7 @@ export function getRemoteAddress(info: Deno.ServeHandlerInfo): Deno.NetAddr {
 
 export function redirect(
     url: URL | string,
-    status: HTTPStatus | Status = HTTPStatus.TEMP_REDIRECT,
+    status: HTTPStatus = HTTPStatus.TEMP_REDIRECT,
     headers?: Headers | undefined,
 ): HTTPResponse {
     const finalHeaders = headers || new Headers()
@@ -184,5 +171,5 @@ export function extractParams(
 }
 
 export function responseLog(response: HTTPResponse): string {
-    return `Response: ${response.status} ${!isError(response.status) ? 'OK' : 'ERROR'}`
+    return `Response: ${response.status} ${!isErrorStatus(response.status) ? 'OK' : 'ERROR'}`
 }

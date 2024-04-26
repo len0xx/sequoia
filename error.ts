@@ -1,10 +1,10 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
-import { Status } from './deps.ts'
 import { Context } from './context.ts'
 import { HTTPStatus } from './status.ts'
 import { HTMLErrorTemplate } from './util.ts'
 import { HTTPResponse } from './httpresponse.ts'
+import { ContentType } from './media.ts'
 
 export class SequoiaError extends Error {
     constructor(message: string) {
@@ -14,9 +14,9 @@ export class SequoiaError extends Error {
 }
 
 export class HTTPError extends Error {
-    readonly code: HTTPStatus | Status
+    readonly code: HTTPStatus
 
-    constructor(code: HTTPStatus | Status, message: string) {
+    constructor(code: HTTPStatus, message: string) {
         super(message)
         this.name = 'HTTPError'
         this.code = code
@@ -311,7 +311,7 @@ export type ErrorHandler = (
 export const defaultErrorHandler: ErrorHandler = (_ctx: Context, error: HTTPError) => {
     return new HTTPResponse({
         status: error.code,
-        type: 'text/html; charset=UTF-8',
+        type: ContentType.HTML,
         body: HTMLErrorTemplate(error),
     })
 }

@@ -2,10 +2,10 @@
 
 import { Application } from './mod.ts'
 import { Router } from './router.ts'
-import { parse, stdPath } from './deps.ts'
+import { parseArgs, stdPath } from './deps.ts'
 
 const pathArg = Deno.args[0]
-const flags = parse(Deno.args, {
+const flags = parseArgs(Deno.args, {
     string: ['hostname', 'port'],
 })
 const HOSTNAME = flags.hostname ?? '0.0.0.0'
