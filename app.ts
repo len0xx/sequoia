@@ -50,6 +50,7 @@ export class Application {
     #configuration: AppConfiguration
     #serverConfiguration = SERVER_CONFIG
     #listening = false
+    #server: Deno.HttpServer | undefined = undefined
     #handleError = defaultErrorHandler
     readonly #handlers: HTTPHandler[] = []
 
@@ -235,11 +236,19 @@ export class Application {
                 onListen: callback,
             }
 
-            Deno.serve(serveOptions, this.handleHTTP)
+            this.#server = Deno.serve(serveOptions, this.handleHTTP)
         } else {
             throw new SequoiaError(
                 'Can not start listening because this instance is already listening!',
             )
+        }
+    }
+
+    public shutdown = async () => {
+        if (this.#listening && this.#server) {
+            await this.#server.shutdown()
+            this.#listening = false
+            this.#server = undefined
         }
     }
 
