@@ -4,7 +4,7 @@ import { HTTPError } from './error.ts'
 import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus } from './status.ts'
-import { isErrorStatus, match, mediaTypes, type Path, stdPath } from './deps.ts'
+import { isErrorStatus, match, mediaTypes, type Path, stdPath, normalizePosix } from './deps.ts'
 import type { RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -24,10 +24,31 @@ export const WINDOWS_DELIMETER_SYMBOL = '\\'
 export const UNIX_DELIMETER_SYMBOL = '/'
 export const DELIMETER_SYMBOL = stdPath.SEPARATOR
 
+export function uniqueSymbols(input: string): string[] {
+    return [...new Set(input.split(''))]
+}
+
+export function eliminateIncorrectPathSegments(segment: string): boolean {
+    const unique = uniqueSymbols(segment)
+    if (unique.length === 0 || unique.length === 1 && unique[0] === '.') return false
+    else return true
+}
+
+export function sanitizePath(path: RoutePath): RoutePath {
+    if (!(path instanceof RegExp) && path !== '*') {
+        const segments = splitPath(path).filter(eliminateIncorrectPathSegments)
+        return segments.join('/')
+    }
+    else return path
+}
+
 export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
         const delimeter = osSpecific ? DELIMETER_SYMBOL : UNIX_DELIMETER_SYMBOL
-        path = stdPath.normalize(path)
+        path = sanitizePath(path) as string
+        const normalizeFn = osSpecific ? stdPath.normalize : normalizePosix
+        path = normalizeFn(path)
+        path = sanitizePath(path) as string
         path = path.endsWith(delimeter) ? path.slice(0, path.length - 1) : path
         return !path.startsWith(delimeter) ? delimeter + path : path
     }

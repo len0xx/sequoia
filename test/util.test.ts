@@ -14,6 +14,7 @@ import {
     splitPath,
 } from '../util.ts'
 import {
+    isWindows,
     assertEquals,
     assertInstanceOf,
     assertStrictEquals,
@@ -128,6 +129,36 @@ Deno.test('Normalize path', async (t) => {
         const source = 'foo/bar'
         const result = normalizePath(source)
         const expected = '/foo/bar'
+        assertEquals(result, expected)
+    })
+
+    await t.step('Single and double dots become single slash', () => {
+        const source = '.'
+        let result = normalizePath(source)
+        const expected = '/'
+        assertEquals(result, expected)
+        result = normalizePath(source + source)
+        assertEquals(result, expected)
+    })
+
+    await t.step('Remove .. in the beginning of string', () => {
+        const source = '../foo/bar'
+        const result = normalizePath(source)
+        const expected = '/foo/bar'
+        assertEquals(result, expected)
+    })
+
+    await t.step('Remove .. in the middle of string', () => {
+        const source = '/foo/../bar'
+        const result = normalizePath(source)
+        const expected = '/foo/bar'
+        assertEquals(result, expected)
+    })
+
+    await t.step('OS-specific normalization', () => {
+        const source = '/foo/bar'
+        const result = normalizePath(source, true)
+        const expected = isWindows ? '\\foo\\bar' : '/foo/bar'
         assertEquals(result, expected)
     })
 })
