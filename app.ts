@@ -3,7 +3,13 @@
 import { Router } from './router.ts'
 import { Context } from './context.ts'
 import { combineMiddlewares, type HTTPHandler, type Middleware } from './middleware.ts'
-import { defaultErrorHandler, error404, error500, ErrorHandler, SequoiaError } from './error.ts'
+import {
+    defaultErrorHandler,
+    ErrorHandler,
+    InternalError,
+    NotFoundError,
+    SequoiaError,
+} from './error.ts'
 import {
     createMatcher,
     getRemoteAddress,
@@ -163,12 +169,12 @@ export class Application {
         if (this.isLoggingEnabled()) {
             this.log('Request', `[${remote.hostname}]:`, request.method, request.url)
         }
+        const context = new Context(request)
 
         if (this.#handlers.length) {
             const handlers = this.matchHandlers(request)
 
             if (handlers.length) {
-                const context = new Context(request)
                 const path = new URL(request.url).pathname
                 const middleware = combineMiddlewares(
                     path,
@@ -187,7 +193,7 @@ export class Application {
 
                 if (!response.empty()) return response.transform()
             }
-            const response = error404
+            const response = await this.#handleError(context, new NotFoundError('Not found'))
             if (this.isLoggingEnabled()) this.log(responseLog(response))
             return response.transform()
         }
@@ -204,8 +210,10 @@ export class Application {
             response = await this.handle(request, info)
         } catch (error) {
             console.error(error)
-            if (this.isLoggingEnabled()) this.log(responseLog(error500))
-            response = error500.transform()
+            const internalError = new InternalError('Internal server error')
+            const errResponse = await this.#handleError(new Context(request), internalError)
+            if (this.isLoggingEnabled()) this.log(responseLog(errResponse))
+            response = errResponse.transform()
         }
 
         return response as Response
