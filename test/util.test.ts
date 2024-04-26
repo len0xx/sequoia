@@ -1,9 +1,9 @@
-// Copyright 2023 the Sequoia authors. All rights reserved. MIT license.
+// Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
 // Test suites for all the utilities described in ../util.ts
 
 import { HTTPHandler } from '../middleware.ts'
-import { HTTPResponse } from '../mod.ts'
+import { HTTPResponse } from '../httpresponse.ts'
 import {
     combineHeaders,
     convertToBody,
@@ -11,15 +11,13 @@ import {
     extractParams,
     isRegExp,
     normalizePath,
-    parseCookies,
     splitPath,
 } from '../util.ts'
-import { isWindows } from '../deps.ts'
 import {
     assertEquals,
     assertInstanceOf,
     assertStrictEquals,
-} from 'https://deno.land/std@0.204.0/assert/mod.ts'
+} from '../deps.ts'
 
 Deno.test('defineContentType', async (t) => {
     await t.step('image/jpeg', () => {
@@ -121,15 +119,15 @@ Deno.test('defineContentType', async (t) => {
 Deno.test('Normalize path', async (t) => {
     await t.step('Remove trailing slash', () => {
         const source = '/foo/bar/'
-        const result = normalizePath(source, true)
-        const expected = isWindows ? '\\foo\\bar' : '/foo/bar'
+        const result = normalizePath(source)
+        const expected = '/foo/bar'
         assertEquals(result, expected)
     })
 
     await t.step('Append leading slash', () => {
         const source = 'foo/bar'
-        const result = normalizePath(source, true)
-        const expected = isWindows ? '\\foo\\bar' : '/foo/bar'
+        const result = normalizePath(source)
+        const expected = '/foo/bar'
         assertEquals(result, expected)
     })
 })
@@ -204,35 +202,6 @@ Deno.test('splitPath', async (t) => {
         const result = splitPath(source)
         assertEquals(result, ['foo', 'bar', 'baz'])
     })
-})
-
-Deno.test('parseCookies', async (t) => {
-    await t.step('empty', () => {
-        const source = ''
-        const result = parseCookies(source)
-        assertEquals(result, {})
-    })
-
-    await t.step('simple example', () => {
-        const source = 'token=AyshjSyc;example=SbhSDydj2'
-        const result = parseCookies(source)
-        const cookies = {
-            token: 'AyshjSyc',
-            example: 'SbhSDydj2',
-        }
-        assertEquals(result, cookies)
-    })
-
-    // await t.step("more complex example", () => {
-    //   const source =
-    //     "_gh_sess=m6ijJxCu3UHndM4%2Fv1ajMUInK9W0DsonfCb0a%2BHodf8dHWcBdBryG1HaWES4wJJ1VDQvE%2Fss2m9NJgR2ryjBIRZrfqKvgxylyhuy4oifH3kCaNtguTuEB4TYoSN3sJA%2BdyzBqvnkM%2Fa2gXf63XDPjMEE9sn38sOWPmcAaO%2F4PkAbxvWGlTTqAp82REqUKTFqfPJ9AidoHih2GQKXtX%2Bb36lhhdJpoNbuLwA1sxVep0R05SV8Ll5zL43QkNoZT7udm%2BrGJmIYvoHkTcsqSyTbeOWqcbCqnW8UuDrdKGbC7L3%2BQm%2Ba3My6Pi1WtO6DqCM0QIQypQ9oX0veH6S99oqLUPRmZ7QxXX%2FJyeFxMx0GM0CrfrfxAoSBCxZqr3HNp7qW9ibSBrynFRKbAjtVUqGvzNCtBHsbo1IC8zHxSBrPxJSGudbDDuco6vpauFKy8xRNpCFh8qXam09ra1CCQB6gozOci7JL2w4PX…guKz9I2%2FeaJ%2FA05LyEjRRPegavkqIXp0SQVboiT3JIUIM20JvnqSf2rmayMVqdgU39ALbGGk23JYSKeGOfiG%2FGkSlwyRwWk014PnEkmYlkhKnMqgDFgjvXb2Ka%2FVDP%2FFqtirGR46Zx6mOgUIYEHw9HuhlI1OOSpBHeV8%2F4HfkIfk3oZaiDtxdXumZTuEcOOWWxOrnAgcHENtdbz463uHS%2F0SJMXL%2FzQXtwQlIOrm6jPeBSNeD4hnElqSD8JtRS645%2BOxdmnga13c2p%2B0YKb5r59u5A3OOMJaaZYdbTa%2FsFCrrO0MH55Sj0LeHjgWCQVmPrRz%2F2BdlIl520XIEHxH%2B7jfLQYRIZVNh04gxcVaRe40B53Hu5v%2FhIcBTsB%2Btzn1w%3D%3D--ckpi2CLiJX5lI%2FsL--gTdeH2ACm7W3wX1jKNIdrQ%3D%3D; path=/; secure; HttpOnly; SameSite=Lax;has_recent_activity=1; path=/; expires=Tue, 02 Jan 2024 08:01:19 GMT; secure; HttpOnly; SameSite=Lax";
-    //   const result = parseCookies(source);
-    //   const cookies = {
-    //     token: "AyshjSyc",
-    //     example: "SbhSDydj2",
-    //   };
-    //   assertEquals(result, cookies);
-    // });
 })
 
 Deno.test('combineHeaders', async (t) => {

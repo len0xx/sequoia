@@ -2,7 +2,7 @@
 
 export * as stdPath from 'https://deno.land/std@0.223.0/path/mod.ts'
 export * as mediaTypes from 'https://deno.land/std@0.223.0/media_types/mod.ts'
-export * from 'https://deno.land/std@0.223.0/testing/asserts.ts'
+export * from 'https://deno.land/std@0.223.0/assert/mod.ts'
 export {
     isClientErrorStatus,
     isErrorStatus,
