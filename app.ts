@@ -33,7 +33,7 @@ const APP_CONFIG: AppConfiguration = {
 }
 const SERVER_CONFIG: ServerConfiguration = {
     hostname: '127.0.0.1',
-    port: 80,
+    port: 8000,
 }
 
 export type UseMethod = {
