@@ -233,7 +233,7 @@ export class Application {
                 hostname: config.hostname,
                 port: config.port,
                 signal: config.signal,
-                onListen: callback,
+                onListen: callback || (() => undefined),
             }
 
             this.#server = Deno.serve(serveOptions, this.handleHTTP)
