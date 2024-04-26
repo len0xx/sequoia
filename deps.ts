@@ -10,7 +10,6 @@ export {
     isClientErrorStatus,
     isErrorStatus,
     isServerErrorStatus,
-    STATUS_CODE,
 } from 'https://deno.land/std@0.223.0/http/status.ts'
 export * from 'https://deno.land/x/path_to_regexp@v6.2.1/index.ts'
 export { parseArgs } from 'https://deno.land/std@0.223.0/cli/parse_args.ts'
