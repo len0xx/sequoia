@@ -23,16 +23,7 @@ export function recordToStorage(
 }
 
 export function parseCookies(input: string): Record<string, string> {
-    const inputArr = input
-        .split(';')
-        .filter(Boolean)
-        .map((entry) => entry.trim())
-    const result: Record<string, string> = {}
-    for (const val of inputArr) {
-        const cur = val.split('=')
-        result[cur[0]] = decodeURIComponent(cur[1])
-    }
-    return result
+    return Object.fromEntries(input.split('; ').map(v=>v.split(/=(.*)/s).map(decodeURIComponent)))
 }
 
 export class Cookie {
