@@ -1,8 +1,8 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
-import { Router } from './router.ts'
+import { RouteHandler, Router } from './router.ts'
 import { Context } from './context.ts'
-import { combineMiddlewares, type HTTPHandler, type Middleware } from './middleware.ts'
+import { combineMiddlewares, type Middleware } from './middleware.ts'
 import {
     defaultErrorHandler,
     ErrorHandler,
@@ -10,13 +10,7 @@ import {
     NotFoundError,
     SequoiaError,
 } from './error.ts'
-import {
-    createMatcher,
-    getRemoteAddress,
-    normalizePath,
-    outputHandlers,
-    responseLog,
-} from './util.ts'
+import { getRemoteAddress, normalizePath, outputHandlers, responseLog } from './util.ts'
 
 export interface AppConfiguration {
     logging: boolean
@@ -57,7 +51,7 @@ export class Application {
     #listening = false
     #server: Deno.HttpServer | undefined = undefined
     #handleError = defaultErrorHandler
-    readonly #handlers: HTTPHandler[] = []
+    readonly #handlers: RouteHandler[] = []
 
     constructor(configuration: Partial<AppConfiguration> = APP_CONFIG) {
         this.#configuration = { ...APP_CONFIG, ...configuration }
@@ -77,13 +71,14 @@ export class Application {
 
         for (const middle of middles) {
             if (typeof middle === 'function') {
-                this.#handlers.push({
+                const handler = new RouteHandler({
                     root: typeof pathOrMiddlewares === 'string' ? pathOrMiddlewares : '/',
                     path: '*',
                     middleware: middle,
                     static: false,
                     methods: [],
-                } as HTTPHandler)
+                })
+                this.#handlers.push(handler)
             } else {
                 throw new SequoiaError(
                     'Only functions may be passed to this method as middlwares',
@@ -104,11 +99,14 @@ export class Application {
             typeof pathOrRouter === 'string' &&
             router instanceof Router
         ) {
-            const root = normalizePath(pathOrRouter)
+            const root = normalizePath(pathOrRouter) as string
             this.#handlers.push(
                 ...router
                     .getHandlers()
-                    .map((handler) => ({ ...handler, root }) as HTTPHandler),
+                    .map((handler) => {
+                        handler.root = root
+                        return handler
+                    }),
             )
         } else {
             throw new SequoiaError(
@@ -121,39 +119,9 @@ export class Application {
         this.#handleError = handler
     }
 
-    protected checkHandler = (
-        handler: HTTPHandler,
-        path: string,
-        method: string,
-    ): boolean => {
-        const relativePath = handler.root === '/'
-            ? path
-            : (normalizePath(path.split(handler.root)[1] || '/') as string)
-
-        if (
-            (handler.methods.includes(method) || handler.methods.length === 0) &&
-            path.startsWith(handler.root)
-        ) {
-            if (handler.path instanceof RegExp) {
-                return handler.path.test(relativePath)
-            } else if (
-                handler.path === '*' ||
-                (path === handler.path && path === '/') ||
-                (handler.static && path.startsWith(handler.path))
-            ) {
-                return true
-            }
-
-            const match = createMatcher(handler.path)
-            return Boolean(match(relativePath))
-        }
-        return false
-    }
-
-    protected matchHandlers = (request: Request): HTTPHandler[] => {
+    protected matchHandlers = (request: Request): RouteHandler[] => {
         return this.#handlers.filter((handler) =>
-            this.checkHandler(
-                handler,
+            handler.match(
                 new URL(request.url).pathname,
                 request.method.toUpperCase(),
             )

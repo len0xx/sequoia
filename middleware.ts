@@ -5,7 +5,7 @@ import { HTTPResponse } from './httpresponse.ts'
 import { HTTPContextRequest } from './httprequest.ts'
 import { combineHeaders, extractParams } from './util.ts'
 import { defaultErrorHandler, ErrorHandler, HTTPError, SequoiaError } from './error.ts'
-import type { RouteParams, RoutePath, RouterOptions } from './router.ts'
+import type { RouteHandler, RouteParams } from './router.ts'
 
 export type MiddlewareReturn =
     | Promise<HTTPResponse>
@@ -25,18 +25,9 @@ export type Middleware = <
 
 export type NextMiddleware = () => MiddlewareReturn
 
-export interface HTTPHandler {
-    path: RoutePath
-    methods: string[]
-    middleware: Middleware
-    static: boolean
-    options?: RouterOptions
-    root: string
-}
-
 export function combineMiddlewares(
     path: string,
-    handlers: HTTPHandler[],
+    handlers: RouteHandler[],
     errorHandler: ErrorHandler = defaultErrorHandler,
 ): (context: Context) => MiddlewareReturn {
     return (context: Context) => {

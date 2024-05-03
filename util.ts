@@ -1,11 +1,10 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
 import { HTTPError } from './error.ts'
-import { HTTPHandler } from './middleware.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus } from './status.ts'
 import { isErrorStatus, match, mediaTypes, normalizePosix, type Path, stdPath } from './deps.ts'
-import type { RoutePath } from './router.ts'
+import { RouteHandler, type RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
@@ -174,8 +173,8 @@ export function combineHeaders(...headers: Headers[]): Headers {
 }
 
 export function outputHandlers(
-    handler: HTTPHandler,
-): Pick<HTTPHandler, 'root' | 'path' | 'static'> & { methods: string } {
+    handler: RouteHandler,
+): Pick<RouteHandler, 'root' | 'path' | 'static'> & { methods: string } {
     return {
         root: handler.root,
         path: handler.path,
@@ -185,7 +184,7 @@ export function outputHandlers(
 }
 
 export function extractParams(
-    handler: HTTPHandler,
+    handler: RouteHandler,
     path: string,
 ): Record<string, string> {
     const match = handler.path !== '*' ? createMatcher(handler.path) : (_: string) => false

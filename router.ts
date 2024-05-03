@@ -2,9 +2,9 @@
 
 import { HTTPStatus } from './status.ts'
 import { ContentType } from './media.ts'
-import { HTMLErrorTemplate, normalizePath } from './util.ts'
+import { createMatcher, HTMLErrorTemplate, normalizePath } from './util.ts'
 import { HTTPResponse, HTTPResponseOptions } from './httpresponse.ts'
-import type { HTTPHandler, Middleware } from './middleware.ts'
+import type { Middleware } from './middleware.ts'
 import { serveStatic } from './static.ts'
 import { error500, HTTPError } from './error.ts'
 
@@ -29,15 +29,67 @@ export type RouteParams = Record<string, string>
 
 export type RoutePath = string | RegExp
 
+export interface HandlerOptions {
+    path: RoutePath
+    methods: string[]
+    middleware: Middleware
+    static: boolean
+    routerOptions?: RouterOptions
+    root: string
+}
+
+export class RouteHandler {
+    path: RoutePath
+    methods: string[]
+    middleware: Middleware
+    static: boolean
+    options?: RouterOptions
+    root: string
+
+    constructor(options: HandlerOptions) {
+        this.path = options.path
+        this.methods = options.methods
+        this.middleware = options.middleware
+        this.static = options.static
+        this.options = options.routerOptions
+        this.root = options.root
+    }
+
+    public match(path: string, method: string): boolean {
+        const relativePath = this.root === '/'
+            ? path
+            : (normalizePath(path.split(this.root)[1] || '/') as string)
+
+        if (
+            (this.methods.includes(method) || this.methods.length === 0) &&
+            path.startsWith(this.root)
+        ) {
+            if (this.path instanceof RegExp) {
+                return this.path.test(relativePath)
+            } else if (
+                this.path === '*' ||
+                (path === this.path && path === '/') ||
+                (this.static && path.startsWith(this.path))
+            ) {
+                return true
+            }
+
+            const match = createMatcher(this.path)
+            return Boolean(match(relativePath))
+        }
+        return false
+    }
+}
+
 export class Router {
     readonly #options: RouterOptions
-    readonly #handlers: HTTPHandler[] = []
+    readonly #handlers: RouteHandler[] = []
 
     constructor(options = defaultOptions) {
         this.#options = options
     }
 
-    public getHandlers = (): HTTPHandler[] => [...this.#handlers]
+    public getHandlers = (): RouteHandler[] => [...this.#handlers]
 
     protected register = (
         methods: HTTPMethod | HTTPMethod[],
@@ -46,14 +98,15 @@ export class Router {
         isStatic = false,
     ): void => {
         for (const middleware of middlewares) {
-            this.#handlers.push({
+            const handler = new RouteHandler({
                 path,
                 root: '/',
                 middleware,
                 static: isStatic,
                 methods: typeof methods === 'string' ? [methods] : methods,
-                options: this.#options,
+                routerOptions: this.#options,
             })
+            this.#handlers.push(handler)
         }
     }
 
