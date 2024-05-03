@@ -23,7 +23,9 @@ export function recordToStorage(
 }
 
 export function parseCookies(input: string): Record<string, string> {
-    return Object.fromEntries(input.split('; ').map(v=>v.split(/=(.*)/s).map(decodeURIComponent)))
+    return Object.fromEntries(
+        input.split('; ').map((v) => v.split(/=(.*)/s).map(decodeURIComponent)),
+    )
 }
 
 export class Cookie {

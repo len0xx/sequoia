@@ -181,7 +181,7 @@ export class Application {
                     this.#handleError,
                 )
 
-                const response = (await middleware(context))
+                const response = await middleware(context)
                 if (response) {
                     response.applyCookies(context.cookies)
 
