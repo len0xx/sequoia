@@ -38,7 +38,7 @@
     "fmt": {
         "exclude": [
             "examples",
-            "LICENSE.md",
+            "LICENSE",
             "README-ru.md",
             "README.md"
         ],
