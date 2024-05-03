@@ -17,7 +17,6 @@ import {
     outputHandlers,
     responseLog,
 } from './util.ts'
-import { HTTPResponse } from './httpresponse.ts'
 
 export interface AppConfiguration {
     logging: boolean
@@ -182,16 +181,18 @@ export class Application {
                     this.#handleError,
                 )
 
-                const response = (await middleware(context)) as HTTPResponse
-                response.applyCookies(context.cookies)
+                const response = (await middleware(context))
+                if (response) {
+                    response.applyCookies(context.cookies)
 
-                if (this.isLoggingEnabled()) {
-                    this.log('Matched handlers:')
-                    this.dir(handlers.map(outputHandlers))
-                    this.log(responseLog(response))
+                    if (this.isLoggingEnabled()) {
+                        this.log('Matched handlers:')
+                        this.dir(handlers.map(outputHandlers))
+                        this.log(responseLog(response))
+                    }
+
+                    return response.transform()
                 }
-
-                if (!response.empty()) return response.transform()
             }
             const response = await this.#handleError(context, new NotFoundError('Not found'))
             if (this.isLoggingEnabled()) this.log(responseLog(response))
