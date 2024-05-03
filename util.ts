@@ -44,11 +44,13 @@ export function sanitizePath(path: RoutePath): RoutePath {
 export function normalizePath(path: RoutePath, osSpecific = false): RoutePath {
     if (!(path instanceof RegExp) && path !== '*') {
         const delimeter = osSpecific ? DELIMETER_SYMBOL : UNIX_DELIMETER_SYMBOL
-        path = sanitizePath(path) as string
         const normalizeFn = osSpecific ? stdPath.normalize : normalizePosix
+
+        path = sanitizePath(path) as string
         path = normalizeFn(path)
         path = sanitizePath(path) as string
         path = path.endsWith(delimeter) ? path.slice(0, path.length - 1) : path
+
         return !path.startsWith(delimeter) ? delimeter + path : path
     }
     return path
