@@ -12,12 +12,12 @@ import { Middleware } from '../mod.ts'
 
 function mockHandler(middleware: Middleware) {
     return new RouteHandler({
-            path: '/',
-            methods: ['GET'],
-            static: false,
-            root: '/',
-            middleware,
-        })
+        path: '/',
+        methods: ['GET'],
+        static: false,
+        root: '/',
+        middleware,
+    })
 }
 
 Deno.test('combineMiddlewares()', async () => {
