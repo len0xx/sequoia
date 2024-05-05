@@ -3,7 +3,7 @@
 // Test suites for all the components described in ../static.ts
 
 import { fileExists, serveFile, serveStatic } from '../static.ts'
-import { assertEquals } from '../deps.ts'
+import { assertEquals, isWindows } from '../deps.ts'
 import { ContentType } from '../media.ts'
 
 Deno.test({
@@ -37,7 +37,8 @@ Deno.test({
             const url = new URL('http://localhost:8080/docs/text.txt')
             const response = await serveStatic(url, '/docs', './test/assets')
             const res = response.transform()
-            assertEquals(await res.text(), 'Hello Sequoia\n')
+            const terminatingChar = isWindows ? '\r\n' : '\n'
+            assertEquals(await res.text(), 'Hello Sequoia' + terminatingChar)
             assertEquals(res.headers.get('Content-Type'), ContentType.PLAIN)
         })
     },
