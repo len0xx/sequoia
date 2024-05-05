@@ -54,7 +54,7 @@ Deno.test('Cookie class', async (t) => {
         const cookie = new Cookie('foo', 'bar', options)
         assertEquals(
             cookie.toString(),
-            'foo=bar; Expires=Mon, 17 Jun 2024 08:24:00 GMT; HttpOnly; Secure; Domain=localhost.com; Path=/; SameSite=lax; Max-Age=12345',
+            `foo=bar; Expires=${ date.toUTCString() }; HttpOnly; Secure; Domain=localhost.com; Path=/; SameSite=lax; Max-Age=12345`,
         )
     })
 })
