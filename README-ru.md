@@ -82,8 +82,8 @@ router.GET('/', (ctx) => {
 
 app.useRouter(router)
 
-const HOST = Deno.env.get('HOST') ?? '127.0.0.1'
-const PORT = Number(Deno.env.get('PORT') ?? 8000)
+const HOST = Deno.env.get('HOST') ?? '0.0.0.0'
+const PORT = Number(Deno.env.get('PORT') ?? 80)
 
 app.listen(
     { hostname: HOST, port: PORT },
