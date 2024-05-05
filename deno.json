@@ -1,6 +1,6 @@
 {
     "tasks": {
-        "lint:fmt": "deno lint && deno fmt",
+        "lint:fmt": "deno lint --fix && deno fmt",
         "test": "deno test --allow-net --allow-read=test --parallel test",
         "check": "deno task lint:fmt",
         "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
