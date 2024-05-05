@@ -2,7 +2,7 @@
 
 // Test suites for all the utilities described in ../util.ts
 
-import { HTTPHandler } from '../middleware.ts'
+import { RouteHandler } from '../router.ts'
 import { HTTPResponse } from '../httpresponse.ts'
 import {
     combineHeaders,
@@ -15,7 +15,7 @@ import {
 } from '../util.ts'
 import { assertEquals, assertInstanceOf, assertStrictEquals, isWindows } from '../deps.ts'
 
-Deno.test('defineContentType', async (t) => {
+Deno.test('defineContentType()', async (t) => {
     await t.step('image/jpeg', () => {
         const content = defineContentType('name.jpg')
         assertEquals(content, 'image/jpeg')
@@ -112,7 +112,7 @@ Deno.test('defineContentType', async (t) => {
     })
 })
 
-Deno.test('Normalize path', async (t) => {
+Deno.test('normalizePath()', async (t) => {
     await t.step('Remove trailing slash', () => {
         const source = '/foo/bar/'
         const result = normalizePath(source)
@@ -158,7 +158,7 @@ Deno.test('Normalize path', async (t) => {
     })
 })
 
-Deno.test('Convert to body', async (t) => {
+Deno.test('convertToBody()', async (t) => {
     await t.step('Transform plain JS object into JSON', () => {
         const source = { ok: true }
         const result = convertToBody(source)
@@ -196,7 +196,7 @@ Deno.test('Convert to body', async (t) => {
     })
 })
 
-Deno.test('isRegExp', async (t) => {
+Deno.test('isRegExp()', async (t) => {
     await t.step('true', () => {
         const source = /[a-z]{3}/
         const result = isRegExp(source)
@@ -210,7 +210,7 @@ Deno.test('isRegExp', async (t) => {
     })
 })
 
-Deno.test('splitPath', async (t) => {
+Deno.test('splitPath()', async (t) => {
     await t.step('empty', () => {
         const source = '/'
         const result = splitPath(source)
@@ -230,7 +230,7 @@ Deno.test('splitPath', async (t) => {
     })
 })
 
-Deno.test('combineHeaders', async (t) => {
+Deno.test('combineHeaders()', async (t) => {
     await t.step('empty', () => {
         const source = new Headers()
         const source2 = new Headers()
@@ -249,14 +249,14 @@ Deno.test('combineHeaders', async (t) => {
     })
 })
 
-Deno.test('extractParams', async (t) => {
-    const handler: HTTPHandler = {
+Deno.test('extractParams()', async (t) => {
+    const handler = new RouteHandler({
         path: '/',
         root: '/',
         methods: ['GET'],
         middleware: () => new HTTPResponse('Test'),
         static: false,
-    }
+    })
 
     await t.step('single param', () => {
         handler.path = '/:id'
