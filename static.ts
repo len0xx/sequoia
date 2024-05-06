@@ -25,7 +25,7 @@ export async function serveFile(src: string): Promise<HTTPResponse> {
         }
     } catch (error) {
         if (error instanceof Deno.errors.NotFound) {
-            throw new NotFoundError('The file is not found')
+            throw new NotFoundError('The page you are looking for is not found')
         } else throw error
     }
 
@@ -40,12 +40,13 @@ export async function serveFile(src: string): Promise<HTTPResponse> {
     return response
 }
 
-export async function serveStatic(url: URL, path: string, dir: string): Promise<HTTPResponse> {
+export async function serveStatic(url: URL, path: string, dir: string, debug = false): Promise<HTTPResponse> {
     const filename = url.pathname.endsWith('/') ? '/' : stdPath.basename(url.pathname)
     const relativePath = url.pathname.replace(normalizePath(path, true), '')
 
     if (filename) {
         const filepath = stdPath.join(stdPath.normalize(dir), relativePath)
+        if (debug) console.log(filepath)
         let response: HTTPResponse | undefined = undefined
         try {
             if (await fileExists(filepath)) {
@@ -55,7 +56,7 @@ export async function serveStatic(url: URL, path: string, dir: string): Promise<
             }
 
             if (!response) {
-                throw new HTTPError(HTTPStatus.NOT_FOUND, 'The page was not found')
+                throw new HTTPError(HTTPStatus.NOT_FOUND, 'The page you are looking for is not found')
             }
             return response
         } catch (error) {
@@ -67,5 +68,5 @@ export async function serveStatic(url: URL, path: string, dir: string): Promise<
             )
         }
     }
-    throw new HTTPError(HTTPStatus.NOT_FOUND, 'The page was not found')
+    throw new HTTPError(HTTPStatus.NOT_FOUND, 'The page you are looking for is not found')
 }
