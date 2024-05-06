@@ -47,7 +47,8 @@ export async function serveStatic(
     debug = false,
 ): Promise<HTTPResponse> {
     const filename = url.pathname.endsWith('/') ? '/' : stdPath.basename(url.pathname)
-    const relativePath = url.pathname.replace(normalizePath(path, true), '')
+    const relativePath = url.pathname.replace(normalizePath(path), '')
+    if (debug) console.log(relativePath)
 
     if (filename) {
         const filepath = stdPath.join(stdPath.normalize(dir), relativePath)
