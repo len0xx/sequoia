@@ -24,8 +24,20 @@ Deno.test({
         await t.step('text file', async () => {
             const response = await serveFile('./test/assets/text.txt')
             const res = response.transform()
-            assertEquals(await res.text(), 'Hello Sequoia' + TERMINATING_SYMBOL)
+            const resultingString = 'Hello Sequoia' + TERMINATING_SYMBOL
+
+            assertEquals(await res.text(), resultingString)
             assertEquals(res.headers.get('Content-Type'), ContentType.PLAIN)
+            assertEquals(res.headers.get('Content-Length'), resultingString.length.toString())
+        })
+
+        await t.step('image file', async () => {
+            const response = await serveFile('./test/assets/sequoia-photo.jpg')
+            const res = response.transform()
+            await res.blob()
+
+            assertEquals(res.headers.get('Content-Type'), ContentType.JPEG)
+            assertEquals(res.headers.get('Content-Length'), '177505')
         })
     },
 })
@@ -38,6 +50,7 @@ Deno.test({
             const url = new URL('http://localhost:8080/docs/text.txt')
             const response = await serveStatic(url, '/docs', './test/assets')
             const res = response.transform()
+
             assertEquals(await res.text(), 'Hello Sequoia' + TERMINATING_SYMBOL)
             assertEquals(res.headers.get('Content-Type'), ContentType.PLAIN)
         })
