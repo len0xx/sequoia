@@ -118,4 +118,19 @@ Deno.test('parseCookies()', async (t) => {
         }
         assertEquals(result, cookies)
     })
+
+    await t.step('URI-encoded cookie', () => {
+        const firstString = 'Hello World;'
+        const firstValue = encodeURIComponent(firstString)
+        const secondString = '$(test-value:?)'
+        const secondValue = encodeURIComponent(secondString)
+        const source = `first=${firstValue}; second=${secondValue}`
+        const result = parseCookies(source)
+
+        const cookies = {
+            first: firstString,
+            second: secondString,
+        }
+        assertEquals(result, cookies)
+    })
 })
