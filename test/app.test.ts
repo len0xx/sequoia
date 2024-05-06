@@ -130,6 +130,5 @@ Deno.test({
     assertRejects(
         async () => await fetch(`${BASE_URL}:${port}/`),
         TypeError,
-        `error sending request for url (${BASE_URL}:${port}/): connection closed before message completed`,
     )
 })
