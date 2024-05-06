@@ -5,7 +5,7 @@
     "tasks": {
         "lint:fmt": "deno lint --fix && deno fmt",
         "test": "deno test --allow-net --allow-read=test --parallel test",
-        "check": "deno lint && deno fmt --check",
+        "check": "deno lint && deno fmt --check"
     },
     "lint": {
         "rules": {
