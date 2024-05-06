@@ -23,21 +23,25 @@ export async function serveFile(src: string): Promise<HTTPResponse> {
         if (fileInfo.isDirectory) {
             throw new HTTPError(HTTPStatus.FORBIDDEN, 'The requested file is a directory')
         }
+
+        const file = await Deno.open(src, { read: true })
+        const size = fileInfo.size
+        const contentType = defineContentType(stdPath.basename(src))
+        const headers = new Headers()
+        headers.set('Content-Length', size.toString())
+        const response = new HTTPResponse({
+            status: HTTPStatus.SUCCESS,
+            type: contentType || ContentType.PLAIN,
+            body: file.readable,
+            headers,
+        })
+
+        return response
     } catch (error) {
         if (error instanceof Deno.errors.NotFound) {
             throw new NotFoundError('The page you are looking for is not found')
         } else throw error
     }
-
-    const file = await Deno.open(src, { read: true })
-    const contentType = defineContentType(stdPath.basename(src))
-    const response = new HTTPResponse({
-        status: HTTPStatus.SUCCESS,
-        type: contentType || ContentType.PLAIN,
-        body: file.readable,
-    })
-
-    return response
 }
 
 export async function serveStatic(
