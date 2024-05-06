@@ -10,7 +10,7 @@ Check out the [website](https://sequoia.len0xx.ru)
 
 ## Why Sequoia?
 
-`Sequoia` was developed to enhance the Developer Experience for those who create APIs with `Node.js/Deno`. `Node.js` has a lot of disadvantages compared to `Deno`. That's why `Sequoia` was developed first for `Deno`. Probably it will be adapted to work with `Node.js` in the future. Read more about `Deno` on the website
+`Sequoia` was developed to enhance the Developer Experience for those who create APIs with `Node.js/Deno`. `Node.js` has a lot of disadvantages compared to `Deno`. That's why `Sequoia` was developed first for `Deno`. Probably it will be adapted to work with `Node.js` in the future. Read more about `Deno` on the [website](https://deno.com/)
 
 You may consider `Sequoia` as an advanced and simplified version of `Express` or `Oak`. Because for now the libraries have a lot of similarities, but it's a subject to change in the future
 
@@ -100,7 +100,7 @@ To see more examples visit **[the website](https://sequoia.len0xx.ru/guides)**
 
 ## Performance
 
-One of the main goals while designing `Sequoia` was performance. So to measure the performance of our library we ran a simple benchmark (ab -n 1000000 -c 100 127.0.0.1:8000), here are the results for `Sequoia`, native `Deno` server and a server on `Express`:
+One of the main goals while designing `Sequoia` was performance. So to measure the performance of our library we ran a simple benchmark (`ab -n 1000000 -c 100 127.0.0.1:8000`), here are the results for `Sequoia`, native `Deno` server and a server on `Express`:
 
 > RPS - Requests per second
 
