@@ -36,7 +36,7 @@ Deno.test({
     fn: async (t) => {
         await t.step('text file', async () => {
             const url = new URL('http://localhost:8080/docs/text.txt')
-            const response = await serveStatic(url, '/docs', './test/assets', true)
+            const response = await serveStatic(url, '/docs', './test/assets')
             const res = response.transform()
             const terminatingChar = isWindows ? '\r\n' : '\n'
             assertEquals(await res.text(), 'Hello Sequoia' + terminatingChar)

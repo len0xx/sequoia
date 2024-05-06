@@ -44,15 +44,12 @@ export async function serveStatic(
     url: URL,
     path: string,
     dir: string,
-    debug = false,
 ): Promise<HTTPResponse> {
     const filename = url.pathname.endsWith('/') ? '/' : stdPath.basename(url.pathname)
     const relativePath = url.pathname.replace(normalizePath(path), '')
-    if (debug) console.log(relativePath)
 
     if (filename) {
         const filepath = stdPath.join(stdPath.normalize(dir), relativePath)
-        if (debug) console.log(filepath)
         let response: HTTPResponse | undefined = undefined
         try {
             if (await fileExists(filepath)) {
