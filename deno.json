@@ -48,6 +48,7 @@
         "@std/cli": "jsr:@std/cli@^0.223.0",
         "@std/http": "jsr:@std/http@^0.223.0",
         "@std/media-types": "jsr:@std/media-types@^0.223.0",
-        "@std/path": "jsr:@std/path@^0.223.0"
+        "@std/path": "jsr:@std/path@^0.223.0",
+        "path-to-regexp": "npm:path-to-regexp@^6.2.1"
     }
 }
