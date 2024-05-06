@@ -1,7 +1,10 @@
 {
     "name": "@sequoia/sequoia",
-    "version": "0.6.3",
-    "exports": "./mod.ts",
+    "version": "0.6.4",
+    "exports": {
+        ".": "./mod.ts",
+        "error": "./error.ts"
+    },
     "tasks": {
         "lint:fmt": "deno lint --fix && deno fmt",
         "test": "deno test --allow-net --allow-read=test --parallel test",
