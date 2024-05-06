@@ -110,10 +110,10 @@ Deno.test('parseCookies()', async (t) => {
     })
 
     await t.step('not empty', () => {
-        const source = 'token=AyshjSyc; example=SbhSDydj2'
+        const source = 'token=NVusVh37Vhs759VjDS8vjoiDB9rn7d1; example=SbhSDydj2'
         const result = parseCookies(source)
         const cookies = {
-            token: 'AyshjSyc',
+            token: 'NVusVh37Vhs759VjDS8vjoiDB9rn7d1',
             example: 'SbhSDydj2',
         }
         assertEquals(result, cookies)
