@@ -3,7 +3,15 @@
 import { HTTPError } from './error.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus } from './status.ts'
-import { isErrorStatus, match, mediaTypes, normalizePosix, type Path, stdPath } from './deps.ts'
+import {
+    isErrorStatus,
+    isWindows,
+    match,
+    mediaTypes,
+    normalizePosix,
+    type Path,
+    stdPath,
+} from './deps.ts'
 import { RouteHandler, type RoutePath } from './router.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
@@ -22,6 +30,8 @@ export function defineContentType(filename: string): string | undefined {
 export const WINDOWS_DELIMETER_SYMBOL = '\\'
 export const UNIX_DELIMETER_SYMBOL = '/'
 export const DELIMETER_SYMBOL = stdPath.SEPARATOR
+
+export const TERMINATING_SYMBOL = isWindows ? '\r\n' : '\n'
 
 export function uniqueSymbols(input: string): string[] {
     return [...new Set(input.split(''))]

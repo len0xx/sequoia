@@ -3,8 +3,9 @@
 // Test suites for all the components described in ../static.ts
 
 import { fileExists, serveFile, serveStatic } from '../static.ts'
-import { assertEquals, isWindows } from '../deps.ts'
+import { assertEquals } from '../deps.ts'
 import { ContentType } from '../media.ts'
+import { TERMINATING_SYMBOL } from '../util.ts'
 
 Deno.test({
     name: 'fileExists()',
@@ -23,8 +24,7 @@ Deno.test({
         await t.step('text file', async () => {
             const response = await serveFile('./test/assets/text.txt')
             const res = response.transform()
-            const terminatingChar = isWindows ? '\r\n' : '\n'
-            assertEquals(await res.text(), 'Hello Sequoia' + terminatingChar)
+            assertEquals(await res.text(), 'Hello Sequoia' + TERMINATING_SYMBOL)
             assertEquals(res.headers.get('Content-Type'), ContentType.PLAIN)
         })
     },
@@ -38,8 +38,7 @@ Deno.test({
             const url = new URL('http://localhost:8080/docs/text.txt')
             const response = await serveStatic(url, '/docs', './test/assets')
             const res = response.transform()
-            const terminatingChar = isWindows ? '\r\n' : '\n'
-            assertEquals(await res.text(), 'Hello Sequoia' + terminatingChar)
+            assertEquals(await res.text(), 'Hello Sequoia' + TERMINATING_SYMBOL)
             assertEquals(res.headers.get('Content-Type'), ContentType.PLAIN)
         })
     },

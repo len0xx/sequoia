@@ -3,9 +3,10 @@
 // Test suites for all the components described in ../context.ts
 
 import { Context } from '../context.ts'
-import { assertEquals, isWindows } from '../deps.ts'
+import { assertEquals } from '../deps.ts'
 import { ContentType } from '../media.ts'
 import { HTTPStatus } from '../status.ts'
+import { TERMINATING_SYMBOL } from '../util.ts'
 
 Deno.test({
     name: 'Context class',
@@ -32,7 +33,6 @@ Deno.test({
             const urlText = 'http://localhost:8080/text.txt'
             const request = new Request(urlText)
             const context = new Context(request)
-            const terminatingChar = isWindows ? '\r\n' : '\n'
 
             const response = await context.send({
                 root: './test/assets',
@@ -40,7 +40,7 @@ Deno.test({
                 extensions: ['txt'],
             })
             assertEquals(response.type, ContentType.PLAIN)
-            assertEquals(await response.transform().text(), 'Hello Sequoia' + terminatingChar)
+            assertEquals(await response.transform().text(), 'Hello Sequoia' + TERMINATING_SYMBOL)
         })
     },
 })
