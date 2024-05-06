@@ -27,23 +27,24 @@ export class HTTPContextRequest<
         this.params = params
     }
 
-    async json() {
+    // deno-lint-ignore no-explicit-any
+    async json(): Promise<any> {
         return await this.originalRequest.json()
     }
 
-    async text() {
+    async text(): Promise<string> {
         return await this.originalRequest.text()
     }
 
-    async formData() {
+    async formData(): Promise<FormData> {
         return await this.originalRequest.formData()
     }
 
-    async blob() {
+    async blob(): Promise<Blob> {
         return await this.originalRequest.blob()
     }
 
-    async arrayBuffer() {
+    async arrayBuffer(): Promise<ArrayBuffer> {
         return await this.originalRequest.arrayBuffer()
     }
 }

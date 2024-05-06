@@ -221,7 +221,7 @@ export class Application {
         }
     }
 
-    public shutdown = async () => {
+    public shutdown = async (): Promise<void> => {
         if (this.#listening && this.#server) {
             await this.#server.shutdown()
             this.#listening = false
@@ -229,7 +229,8 @@ export class Application {
         }
     }
 
-    protected isLoggingEnabled = () => this.#configuration.logging && this.#configuration.logger
+    protected isLoggingEnabled: () => boolean = () =>
+        !!(this.#configuration.logging && this.#configuration.logger)
 
     // deno-lint-ignore no-explicit-any
     protected log = (...data: any[]): void => {

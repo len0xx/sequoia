@@ -34,7 +34,7 @@ export function isStatusNullBody(status: HTTPStatus): boolean {
 
 export class HTTPResponse {
     readonly body: ResponseBody = null
-    readonly headers = new Headers()
+    readonly headers: Headers = new Headers()
     readonly status: HTTPStatus = HTTPStatus.SUCCESS
     readonly type?: string
 
