@@ -1,5 +1,7 @@
 # Sequoia 🦕
 
+[![Unit tests & linting](https://github.com/len0xx/sequoia/actions/workflows/deno.yml/badge.svg)](https://github.com/len0xx/sequoia/actions/workflows/deno.yml)
+
 Библиотека для создания веб-серверов с помощью т.н. middleware. Написана на TypeScript, работает с Deno. Создана по подобию [Oak](https://github.com/oakserver/oak)
 
 Официальный сайт: [sequoia.len0xx.ru](https://sequoia.len0xx.ru)

@@ -1,5 +1,7 @@
 # Sequoia 🦕
 
+[![Unit tests & linting](https://github.com/len0xx/sequoia/actions/workflows/deno.yml/badge.svg)](https://github.com/len0xx/sequoia/actions/workflows/deno.yml)
+
 A library for handling HTTP requests by using middlewares. Written in TypeScript, works with Deno runtime. Inspired by [Oak](https://github.com/oakserver/oak)
 
 Check out the [website](https://sequoia.len0xx.ru)
