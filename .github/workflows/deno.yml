@@ -21,10 +21,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        uses: denoland/setup-deno@041b854f97b325bd60e53e9dc2de9cb9f9ac0cba  # v1.1.4
         with:
           deno-version: v1.42.4
-          node-version: '20'
 
       - name: Verify formatting
         run: deno fmt --check
@@ -41,10 +40,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        uses: denoland/setup-deno@041b854f97b325bd60e53e9dc2de9cb9f9ac0cba  # v1.1.4
         with:
           deno-version: v1.42.4
-          node-version: '20'
 
       - name: Run tests
         run: deno task test
@@ -58,10 +56,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        uses: denoland/setup-deno@041b854f97b325bd60e53e9dc2de9cb9f9ac0cba  # v1.1.4
         with:
           deno-version: v1.42.4
-          node-version: '20'
 
       - name: Run tests
         run: deno task test
@@ -75,10 +72,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Deno
-        uses: denoland/setup-deno@61fe2df320078202e33d7d5ad347e7dcfa0e8f31  # v1.1.2
+        uses: denoland/setup-deno@041b854f97b325bd60e53e9dc2de9cb9f9ac0cba  # v1.1.4
         with:
           deno-version: v1.42.4
-          node-version: '20'
 
       - name: Run tests
         run: deno task test
