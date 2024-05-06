@@ -40,7 +40,12 @@ export async function serveFile(src: string): Promise<HTTPResponse> {
     return response
 }
 
-export async function serveStatic(url: URL, path: string, dir: string, debug = false): Promise<HTTPResponse> {
+export async function serveStatic(
+    url: URL,
+    path: string,
+    dir: string,
+    debug = false,
+): Promise<HTTPResponse> {
     const filename = url.pathname.endsWith('/') ? '/' : stdPath.basename(url.pathname)
     const relativePath = url.pathname.replace(normalizePath(path, true), '')
 
@@ -56,7 +61,10 @@ export async function serveStatic(url: URL, path: string, dir: string, debug = f
             }
 
             if (!response) {
-                throw new HTTPError(HTTPStatus.NOT_FOUND, 'The page you are looking for is not found')
+                throw new HTTPError(
+                    HTTPStatus.NOT_FOUND,
+                    'The page you are looking for is not found',
+                )
             }
             return response
         } catch (error) {
