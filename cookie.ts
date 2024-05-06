@@ -45,7 +45,7 @@ export class Cookie {
 
     constructor(name: string, value: string | null, options?: CookieOptions) {
         this.name = name
-        this.value = value || null
+        this.value = value ? encodeURIComponent(value) : null
         this.httpOnly = options?.httpOnly
         this.path = options?.path
         this.domain = options?.domain

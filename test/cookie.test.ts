@@ -36,7 +36,7 @@ Deno.test('Cookie class', async (t) => {
         assertEquals(cookie.value, 'val')
     })
 
-    await t.step('constructor options', () => {
+    await t.step('constructor with options', () => {
         const cookie = new Cookie('foo', 'bar', options)
         assertEquals(cookie.name, 'foo')
         assertEquals(cookie.value, 'bar')
@@ -48,6 +48,12 @@ Deno.test('Cookie class', async (t) => {
         assertEquals(cookie.secure, options.secure)
         assertEquals(cookie.sameSite, options.sameSite)
         assertEquals(cookie.signed, options.signed)
+    })
+
+    await t.step('constructor with URI-encoded value', () => {
+        const cookie = new Cookie('foo', '$(test-value:;&)', options)
+        assertEquals(cookie.name, 'foo')
+        assertEquals(cookie.value, encodeURIComponent('$(test-value:;&)'))
     })
 
     await t.step('toString()', () => {
