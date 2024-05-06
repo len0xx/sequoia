@@ -96,9 +96,59 @@ After running this command the server is running, so you can go to `http://local
 
 To see more examples visit **[the website](https://sequoia.len0xx.ru/guides)**
 
+## Performance
+
+One of the main goals while designing `Sequoia` was performance. So to measure the performance of our library we ran a simple benchmark (ab -n 1000000 -c 100 127.0.0.1:8000), here are the results for `Sequoia`, native `Deno` server and a server on `Express`:
+
+> RPS - Requests per second
+
+Sequoia benchmark (46956 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   21.296 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      150000000 bytes
+HTML transferred:       11000000 bytes
+Requests per second:    46956.41 [#/sec] (mean)
+Time per request:       2.130 [ms] (mean)
+Time per request:       0.021 [ms] (mean, across all concurrent requests)
+Transfer rate:          6878.38 [Kbytes/sec] received
+```
+
+Deno benchmark (55536 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   18.006 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      150000000 bytes
+HTML transferred:       11000000 bytes
+Requests per second:    55536.75 [#/sec] (mean)
+Time per request:       1.801 [ms] (mean)
+Time per request:       0.018 [ms] (mean, across all concurrent requests)
+Transfer rate:          8135.27 [Kbytes/sec] received
+```
+
+Express (on Node.js) benchmark (11293 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   88.543 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      211000000 bytes
+HTML transferred:       12000000 bytes
+Requests per second:    11293.98 [#/sec] (mean)
+Time per request:       8.854 [ms] (mean)
+Time per request:       0.089 [ms] (mean, across all concurrent requests)
+Transfer rate:          2327.18 [Kbytes/sec] received
+```
+
+All of the benchmark were ran on a Debian linux VM with 2 CPU cores (3.5 GHz) and 2 GB or RAM. Feel free to run your own benchmarks and share the results with us
+
 ## Roadmap
 
-Right now Sequoia is only maintained by its original creator ([@len0xx](https://github.com/len0xx)), though anyone on the internet is welcome to contribute. So new features of a library depend directly on the free time of its maintainer. Do not expect releases too often. 
+Right now Sequoia is only maintained by its original creator ([@len0xx](https://github.com/len0xx)), although anyone on the internet is welcome to contribute. So new features of a library depend directly on the free time of its maintainer. Do not expect releases too often. 
 
 The features that are expected in the upcoming releases:
 
@@ -106,9 +156,9 @@ The features that are expected in the upcoming releases:
 - [x] Describe examples in Wiki
 - [x] Support for CORS headers
 - [x] Upgrade to `Deno.serve()`
+- [x] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for TLS
 - [ ] Support for file uploading
-- [ ] Unit tests and CI/CD through GitHub Actions
 - [ ] Support for WebSockets
 - [ ] Better compatibility with `svelte-adapter-deno`
 - [ ] Support for compression headers

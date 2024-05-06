@@ -103,6 +103,56 @@ app.listen(
 
 Больше примеров можно найти на сайте: **[examples](https://sequoia.len0xx.ru/guides)**
 
+## Производительность
+
+Одно из главных целей при разработке `Sequoia` была производительность. Для того, чтобы измерить эту производительность, были выполнены несколько бенчмарков. Для сравнения те же самые бенчмарки были запущены для серверов на нативном `Deno` и `Express`. Ниже можно ознакомиться с результатами:
+
+> RPS - Количество выполненных запросов за секунду (Requests per second)
+
+Sequoia benchmark (46956 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   21.296 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      150000000 bytes
+HTML transferred:       11000000 bytes
+Requests per second:    46956.41 [#/sec] (mean)
+Time per request:       2.130 [ms] (mean)
+Time per request:       0.021 [ms] (mean, across all concurrent requests)
+Transfer rate:          6878.38 [Kbytes/sec] received
+```
+
+Deno benchmark (55536 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   18.006 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      150000000 bytes
+HTML transferred:       11000000 bytes
+Requests per second:    55536.75 [#/sec] (mean)
+Time per request:       1.801 [ms] (mean)
+Time per request:       0.018 [ms] (mean, across all concurrent requests)
+Transfer rate:          8135.27 [Kbytes/sec] received
+```
+
+Express (on Node.js) benchmark (11293 RPS):
+```
+Concurrency Level:      100
+Time taken for tests:   88.543 seconds
+Complete requests:      1000000
+Failed requests:        0
+Total transferred:      211000000 bytes
+HTML transferred:       12000000 bytes
+Requests per second:    11293.98 [#/sec] (mean)
+Time per request:       8.854 [ms] (mean)
+Time per request:       0.089 [ms] (mean, across all concurrent requests)
+Transfer rate:          2327.18 [Kbytes/sec] received
+```
+
+Данные бенчмарки были запущены на виртуальной машине (Debian linux) с 2 ядрами ЦПУ (3.5 ГГц) и 2 Гб ОЗУ
+
 ## Дальнейшие планы
 
 На данный момент Sequoia разрабатывается только одним человеком ([@len0xx](https://github.com/len0xx)), однако любые предложения по улучшению библиотеки приветствуются в разделе [Issues](https://github.com/len0xx/sequoia/issues)
@@ -113,9 +163,9 @@ app.listen(
 - [x] Описать примеры использования библиотеки в GitHub Wiki
 - [x] Поддержка HTTP CORS заголовков
 - [x] Обновить внутренний API до `Deno.serve()`
+- [x] Модульные тесты и CI/CD с помощью GitHub Actions
 - [ ] Поддержка TLS
 - [ ] Поддержка загрузки файлов
-- [ ] Модульные тесты и CI/CD с помощью GitHub Actions
 - [ ] Поддержка WebSockets
 - [ ] Улучшенная совместимость с `svelte-adapter-deno`
 - [ ] Поддержка HTTP заголовков для сжатия
