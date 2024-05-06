@@ -51,9 +51,9 @@ Deno.test('Cookie class', async (t) => {
     })
 
     await t.step('constructor with URI-encoded value', () => {
-        const cookie = new Cookie('foo', '$(test-value:;&)', options)
+        const cookie = new Cookie('foo', '$(test value:;&)', options)
         assertEquals(cookie.name, 'foo')
-        assertEquals(cookie.value, encodeURIComponent('$(test-value:;&)'))
+        assertEquals(cookie.value, encodeURIComponent('$(test value:;&)'))
     })
 
     await t.step('toString()', () => {
