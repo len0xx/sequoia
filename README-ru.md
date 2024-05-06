@@ -153,6 +153,8 @@ Time per request:       0.089 [ms] (mean, across all concurrent requests)
 Transfer rate:          2327.18 [Kbytes/sec] received
 ```
 
+Команда для запуска бенчмарка: `ab -n 1000000 -c 100 127.0.0.1:8000`
+
 Данные бенчмарки были запущены на виртуальной машине (Debian linux) с 2 ядрами ЦПУ (3.5 ГГц) и 2 Гб ОЗУ
 
 ## Дальнейшие планы
