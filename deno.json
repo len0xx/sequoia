@@ -3,7 +3,7 @@
     "version": "0.6.4",
     "exports": {
         ".": "./mod.ts",
-        "error": "./error.ts"
+        "./error": "./error.ts"
     },
     "tasks": {
         "lint:fmt": "deno lint --fix && deno fmt",

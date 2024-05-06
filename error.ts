@@ -316,7 +316,7 @@ export const defaultErrorHandler: ErrorHandler = (_ctx: Context, error: HTTPErro
     })
 }
 
-export const error400 = new HTTPResponse({
+export const error400: HTTPResponse = new HTTPResponse({
     status: HTTPStatus.BAD_REQUEST,
     type: 'text/html; charset=UTF-8',
     body: HTMLErrorTemplate(
@@ -326,7 +326,7 @@ export const error400 = new HTTPResponse({
     ),
 })
 
-export const error403 = new HTTPResponse({
+export const error403: HTTPResponse = new HTTPResponse({
     status: HTTPStatus.FORBIDDEN,
     type: 'text/html; charset=UTF-8',
     body: HTMLErrorTemplate(
@@ -336,7 +336,7 @@ export const error403 = new HTTPResponse({
     ),
 })
 
-export const error404 = new HTTPResponse({
+export const error404: HTTPResponse = new HTTPResponse({
     status: HTTPStatus.NOT_FOUND,
     type: 'text/html; charset=UTF-8',
     body: HTMLErrorTemplate(
@@ -346,7 +346,7 @@ export const error404 = new HTTPResponse({
     ),
 })
 
-export const error500 = new HTTPResponse({
+export const error500: HTTPResponse = new HTTPResponse({
     status: HTTPStatus.INTERNAL_ERROR,
     type: 'text/html; charset=UTF-8',
     body: HTMLErrorTemplate(
