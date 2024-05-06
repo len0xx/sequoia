@@ -9,15 +9,15 @@
  * To get started you can create your own server using this snippet:
  * ```ts
  * // server.ts
- * import { Application, Router, HTTPStatus, HTTPResponse } from 'https://deno.land/x/sequoia/mod.ts'
+ * import { Application, Router, HTTPStatus, HTTPResponse, ContentType } from 'jsr:@sequoia/sequoia'
  *
  * const app = new Application()
  * const router = new Router()
  *
- * router.GET('/', (ctx) => {
+ * router.GET('/', (_ctx) => {
  *     return new HTTPResponse({
  * 	      status: HTTPStatus.SUCCESS,
- * 	      type: 'application/json',
+ * 	      type: ContentType.JSON,
  * 	      body: { ok: true, healthcheck: 'success' }
  *     })
  * })
@@ -43,16 +43,16 @@
  * }
  *
  * // sequoia.ts
- * (ctx) => {
+ * (_ctx) => {
  *     return new HTTPResponse({
  *         status: HTTPStatus.SUCCESS,
- *         type: 'application/json',
+ *         type: ContentType.JSON,
  *         body: { ok: true, healthcheck: 'success' }
  *     })
  * }
  * ```
  *
- * The examples above create the identical Response object, but in sequoia we aim to give the best developer expirience possible. So instead of setting each property of response one by one you can just return the HTTPResponse object from the middleware. In addition to that there is an enum HTTPStatus which is basically identical to Deno's native Status enum (you can use both of them).
+ * The examples above create 2 identical `Response` objects, but in `Sequoia` we aim to give the best developer expirience possible. So instead of setting each property of response individually you can just return the `HTTPResponse` object from middleware. In addition to that there is an enum `HTTPStatus` which you can use to easily set the status code of response.
  *
  * @module
  */

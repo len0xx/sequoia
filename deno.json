@@ -1,19 +1,13 @@
 {
+    "name": "@sequoia/sequoia",
+    "version": "0.6.3",
+    "exports": "./mod.ts",
     "tasks": {
         "lint:fmt": "deno lint --fix && deno fmt",
         "test": "deno test --allow-net --allow-read=test --parallel test",
-        "check": "deno task lint:fmt",
-        "basic": "deno run --allow-net=127.0.0.1:8000 --watch examples/basic.ts",
-        "params": "deno run --allow-net=127.0.0.1:8000 --watch examples/params.ts",
-        "cookie": "deno run --allow-net=127.0.0.1:8000 --watch examples/cookie.ts",
-        "regex": "deno run --allow-net=127.0.0.1:8000 --watch examples/regex.ts",
-        "request": "deno run --allow-net=127.0.0.1:8000 --watch examples/extend-request.ts",
-        "response": "deno run --allow-net=127.0.0.1:8000 --watch examples/response-types.ts",
-        "static": "deno run --allow-net=127.0.0.1:8000 --allow-read=examples/static --watch examples/static.ts",
-        "sveltekit": "deno run --allow-net=127.0.0.1:8000 --allow-read=examples/sveltekit --watch examples/sveltekit.ts"
+        "check": "deno lint && deno fmt --check"
     },
     "lint": {
-        "exclude": ["examples"],
         "rules": {
             "tags": ["recommended"],
             "include": [
@@ -48,5 +42,13 @@
         "indentWidth": 4,
         "lineWidth": 100,
         "proseWrap": "always"
+    },
+    "imports": {
+        "@std/assert": "jsr:@std/assert@^0.223.0",
+        "@std/cli": "jsr:@std/cli@^0.223.0",
+        "@std/http": "jsr:@std/http@^0.223.0",
+        "@std/media-types": "jsr:@std/media-types@^0.223.0",
+        "@std/path": "jsr:@std/path@^0.223.0",
+        "path-to-regexp": "npm:path-to-regexp@^6.2.1"
     }
 }

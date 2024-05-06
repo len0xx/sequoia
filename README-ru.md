@@ -2,7 +2,7 @@
 
 [![Unit tests & linting](https://github.com/len0xx/sequoia/actions/workflows/deno.yml/badge.svg)](https://github.com/len0xx/sequoia/actions/workflows/deno.yml)
 
-Библиотека для создания веб-серверов с помощью т.н. middleware. Написана на TypeScript, работает с Deno. Создана по подобию [Oak](https://github.com/oakserver/oak)
+Библиотека для создания веб-серверов с помощью т.н. middleware. Написана на TypeScript, работает с Deno. Создана по подобию Oak
 
 Официальный сайт: [sequoia.len0xx.ru](https://sequoia.len0xx.ru)
 
@@ -66,7 +66,7 @@ Middleware-функции занимаются обработкой поступ
 Чтобы создать простой веб-сервер, воспользуйтесь этим примером:
 ```javascript
 // example.ts
-import { Application, Router, HTTPStatus, HTTPResponse } from 'https://deno.land/x/sequoia/mod.ts'
+import { Application, Router, HTTPStatus, HTTPResponse } from 'jsr:@sequoia/sequoia'
 
 const app = new Application({ logging: true })
 const router = new Router({ type: 'application/json' })
@@ -168,11 +168,11 @@ Transfer rate:          2327.18 [Kbytes/sec] received
 - [x] Поддержка HTTP CORS заголовков
 - [x] Обновить внутренний API до `Deno.serve()`
 - [x] Модульные тесты и CI/CD с помощью GitHub Actions
+- [x] Опубликовать библиотеку на `JSR.io`
 - [ ] Поддержка TLS
 - [ ] Поддержка загрузки файлов
 - [ ] Поддержка WebSockets
 - [ ] Улучшенная совместимость с `svelte-adapter-deno`
 - [ ] Поддержка HTTP заголовков для сжатия
-- [ ] Улучшенная документация на `deno.land`
-- [ ] Размещение исходного кода библиотеки за пределами `deno.land`
+- [ ] Улучшенная документация
 - [ ] Имплементация простого в использовании и конфигурации класса для раздачи статических файлов

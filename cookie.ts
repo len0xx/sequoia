@@ -59,7 +59,7 @@ export class Cookie {
             : true
     }
 
-    toString() {
+    toString(): string {
         if (this.value) {
             return `${this.name}=${this.value}${
                 this.expires ? `; Expires=${this.expires.toUTCString()}` : ''
@@ -90,11 +90,11 @@ export class CookieStorage {
             : new Map()
     }
 
-    set = (name: string, value: string | null, options?: CookieOptions) => {
+    set = (name: string, value: string | null, options?: CookieOptions): void => {
         this.#storage.set(name, new Cookie(name, value, options))
     }
 
-    delete = (name: string) => {
+    delete = (name: string): void => {
         const cookie = this.#storage.get(name)
 
         if (cookie) {
@@ -102,11 +102,11 @@ export class CookieStorage {
         }
     }
 
-    get = (name: string) => {
+    get = (name: string): Cookie | null => {
         return this.#storage.get(name) || null
     }
 
-    entries = () => Array.from(this.#storage.entries())
+    entries = (): [string, Cookie][] => Array.from(this.#storage.entries())
 
-    size = () => this.#storage.size
+    size = (): number => this.#storage.size
 }
