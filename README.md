@@ -2,7 +2,7 @@
 
 [![Unit tests & linting](https://github.com/len0xx/sequoia/actions/workflows/deno.yml/badge.svg)](https://github.com/len0xx/sequoia/actions/workflows/deno.yml)
 
-A library for handling HTTP requests by using middlewares. Written in TypeScript, works with Deno runtime. Inspired by [Oak](https://github.com/oakserver/oak)
+A library for handling HTTP requests by using middlewares. Written in TypeScript, works with Deno runtime. Inspired by Oak
 
 Check out the [website](https://sequoia.len0xx.ru)
 
@@ -59,7 +59,7 @@ Using `Sequoia` might seem familiar to those who had some experience with `Oak`,
 To get started you can use this example:
 ```javascript
 // example.ts
-import { Application, Router, HTTPStatus, HTTPResponse } from 'https://deno.land/x/sequoia/mod.ts'
+import { Application, Router, HTTPStatus, HTTPResponse } from 'jsr:@sequoia/sequoia'
 
 const app = new Application({ logging: true })
 const router = new Router({ type: 'application/json' })
@@ -159,11 +159,11 @@ The features that are expected in the upcoming releases:
 - [x] Support for CORS headers
 - [x] Upgrade to `Deno.serve()`
 - [x] Unit tests and CI/CD through GitHub Actions
+- [x] Publish the package to `JSR.io`
 - [ ] Support for TLS
 - [ ] Support for file uploading
 - [ ] Support for WebSockets
 - [ ] Better compatibility with `svelte-adapter-deno`
 - [ ] Support for compression headers
-- [ ] Better documentation on `deno.land`
-- [ ] Host the library outside of `deno.land`
+- [ ] Better documentation
 - [ ] Implement an easy-to-use and highly configurable class for static file serving
