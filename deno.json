@@ -1,6 +1,6 @@
 {
     "name": "@sequoia/sequoia",
-    "version": "0.6.4",
+    "version": "0.6.5",
     "exports": {
         ".": "./mod.ts",
         "./error": "./error.ts"
