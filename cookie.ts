@@ -1,5 +1,7 @@
 // Copyright 2023-2024 the Sequoia authors. All rights reserved. MIT license.
 
+export type CookieValue = string | number | boolean | null
+
 export interface CookieOptions {
     domain?: string
     path?: string
@@ -43,7 +45,7 @@ export class Cookie {
     sameSite?: 'strict' | 'lax' | 'none' | boolean
     signed?: boolean
 
-    constructor(name: string, value: string | null, options?: CookieOptions) {
+    constructor(name: string, value?: CookieValue, options?: CookieOptions) {
         this.name = name
         this.value = value ? encodeURIComponent(value) : null
         this.httpOnly = options?.httpOnly
@@ -90,14 +92,13 @@ export class CookieStorage {
             : new Map()
     }
 
-    set = (name: string, value: string | null, options?: CookieOptions): void => {
+    set = (name: string, value: CookieValue, options?: CookieOptions): void => {
         this.#storage.set(name, new Cookie(name, value, options))
     }
 
     delete = (name: string): void => {
-        const cookie = this.#storage.get(name)
-
-        if (cookie) {
+        if (this.#storage.has(name)) {
+            const cookie = this.#storage.get(name) as Cookie
             this.#storage.set(name, new Cookie(name, null, { path: cookie.path }))
         }
     }
