@@ -192,9 +192,8 @@ export function extractParams(
 ): Record<string, string> {
     if (isRegExp(handler.path) || handler.static) return {}
 
-    const match = handler.path !== '*'
-        ? createMatcher(stdPath.join(handler.root, handler.path as string))
-        : (_: string) => false
+    const pathSegments = handler.root === '/' ? [handler.path] : [handler.root, handler.path]
+    const match = handler.path !== '*' ? createMatcher(pathSegments.join('')) : (_: string) => false
     const result = match(path) as MatchResult
     return result ? result.params : {}
 }
