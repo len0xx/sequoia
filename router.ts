@@ -99,7 +99,7 @@ export class Router {
     ): void => {
         for (const middleware of middlewares) {
             const handler = new RouteHandler({
-                path,
+                path: normalizePath(path),
                 root: '/',
                 middleware,
                 static: isStatic,
@@ -111,47 +111,47 @@ export class Router {
     }
 
     public GET = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('GET', normalizePath(path), middlewares)
+        this.register('GET', path, middlewares)
         return this
     }
 
     public POST = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('POST', normalizePath(path), middlewares)
+        this.register('POST', path, middlewares)
         return this
     }
 
     public PUT = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('PUT', normalizePath(path), middlewares)
+        this.register('PUT', path, middlewares)
         return this
     }
 
     public PATCH = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('PATCH', normalizePath(path), middlewares)
+        this.register('PATCH', path, middlewares)
         return this
     }
 
     public DELETE = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('DELETE', normalizePath(path), middlewares)
+        this.register('DELETE', path, middlewares)
         return this
     }
 
     public HEAD = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('HEAD', normalizePath(path), middlewares)
+        this.register('HEAD', path, middlewares)
         return this
     }
 
     public OPTIONS = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('OPTIONS', normalizePath(path), middlewares)
+        this.register('OPTIONS', path, middlewares)
         return this
     }
 
     public CONNECT = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register('CONNECT', normalizePath(path), middlewares)
+        this.register('CONNECT', path, middlewares)
         return this
     }
 
     public all = (path: RoutePath, ...middlewares: Middleware[]): Router => {
-        this.register([], normalizePath(path), middlewares)
+        this.register([], path, middlewares)
         return this
     }
 
@@ -172,7 +172,7 @@ export class Router {
             }
         }
 
-        this.register('GET', normalizePath(path), [middleware], true)
+        this.register('GET', path, [middleware], true)
         return this
     }
 }
