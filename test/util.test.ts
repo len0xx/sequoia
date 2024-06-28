@@ -14,7 +14,7 @@ import {
     normalizePath,
     splitPath,
 } from '../util.ts'
-import { assertEquals, assertInstanceOf, assertStrictEquals } from '../deps.ts'
+import { assertEquals, assertInstanceOf } from '../deps.ts'
 
 Deno.test('defineContentType()', async (t) => {
     await t.step('image/jpeg', () => {
@@ -286,12 +286,26 @@ Deno.test('extractParams()', async (t) => {
         assertEquals(result.id, 'ABC')
     })
 
+    await t.step('asterisk path', () => {
+        handler.path = '*'
+        const result = extractParams(handler, '/test')
+        assertEquals(result, {})
+    })
+
+    await t.step('handler.root should not break', () => {
+        handler.root = '/v1'
+        handler.path = '/wallet/:address'
+        const result = extractParams(handler, '/v1/wallet/Jv6a8cA_cV')
+        assertEquals(result.address, 'Jv6a8cA_cV')
+    })
+
     await t.step('only numeric param', () => {
+        handler.root = '/'
         handler.path = '/:number(\\d+)'
         let result = extractParams(handler, '/1024')
         assertEquals(result.number, '1024')
         result = extractParams(handler, '/NaN')
-        assertStrictEquals(result, undefined)
+        assertEquals(Object.keys(result).length, 0)
     })
 
     await t.step('only specific words param', () => {
@@ -306,6 +320,10 @@ Deno.test('extractParams()', async (t) => {
         assertEquals(result.foo, 'are')
         result = extractParams(handler, '/awesome')
         assertEquals(result.foo, 'awesome')
+        result = extractParams(handler, '/invalid')
+        assertEquals(Object.keys(result).length, 0)
+        result = extractParams(handler, '/params')
+        assertEquals(Object.keys(result).length, 0)
     })
 
     await t.step('chained optional params', () => {
