@@ -3,17 +3,14 @@
 import { Context } from './context.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPContextRequest } from './httprequest.ts'
-import { combineHeaders, extractParams } from './util.ts'
+import { extractParams, mergeResponses } from './util.ts'
 import { defaultErrorHandler, ErrorHandler, HTTPError, SequoiaError } from './error.ts'
 import type { RouteHandler, RouteParams } from './router.ts'
 
-export type MiddlewareReturn =
-    | Promise<HTTPResponse>
-    | HTTPResponse
-    | Promise<undefined>
-    | undefined
-    | Promise<void>
-    | void
+export type SyncMiddlewareReturn = HTTPResponse | undefined | void
+export type AsyncMiddlewareReturn = Promise<HTTPResponse | undefined | void>
+
+export type MiddlewareReturn = SyncMiddlewareReturn | AsyncMiddlewareReturn
 
 export type Middleware = <
     ParamsT extends RouteParams = RouteParams,
@@ -36,7 +33,7 @@ export function combineMiddlewares(
         ).reverse()
         let index = middlewares.length
 
-        const action = async (i: number): Promise<HTTPResponse> => {
+        const action = async (i: number): AsyncMiddlewareReturn => {
             if (i >= index) {
                 throw new SequoiaError('next() called multiple times')
             }
@@ -65,21 +62,7 @@ export function combineMiddlewares(
                 }
             }
 
-            if (response) {
-                const headers = [
-                    response.headers,
-                    handler.options?.headers,
-                    context.response.headers,
-                ].filter(
-                    (entry) => entry && entry instanceof Headers && Array.from(entry.keys()).length,
-                ) as Headers[]
-
-                context.response.body = response.body
-                context.response.headers = combineHeaders(...headers)
-                context.response.type = response.type || handler.options?.type
-                context.response.status = response.status || handler.options?.status
-            }
-
+            if (response) mergeResponses(context, response, handler.options)
             return context.response
         }
 

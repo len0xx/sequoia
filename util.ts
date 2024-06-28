@@ -4,7 +4,8 @@ import { HTTPError } from './error.ts'
 import { HTTPResponse } from './httpresponse.ts'
 import { HTTPStatus } from './status.ts'
 import { isErrorStatus, match, mediaTypes, normalizePosix, type Path, stdPath } from './deps.ts'
-import { RouteHandler, type RoutePath } from './router.ts'
+import { RouteHandler, type RoutePath, RouterOptions } from './router.ts'
+import { Context } from './context.ts'
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
@@ -189,10 +190,34 @@ export function extractParams(
     handler: RouteHandler,
     path: string,
 ): Record<string, string> {
-    const match = handler.path !== '*' ? createMatcher(handler.path) : (_: string) => false
-    return !(isRegExp(handler.path) || handler.static) ? (match(path) as MatchSuccess).params : {}
+    if (isRegExp(handler.path) || handler.static) return {}
+
+    const match = handler.path !== '*'
+        ? createMatcher(stdPath.join(handler.root, handler.path as string))
+        : (_: string) => false
+    const result = match(path) as MatchResult
+    return result ? result.params : {}
 }
 
 export function responseLog(response: HTTPResponse): string {
     return `Response: ${response.status} ${!isErrorStatus(response.status) ? 'OK' : 'ERROR'}`
+}
+
+export function mergeResponses(
+    context: Context,
+    response: HTTPResponse,
+    handlerOptions?: RouterOptions,
+): void {
+    const headers = [
+        response.headers,
+        handlerOptions?.headers,
+        context.response.headers,
+    ].filter(
+        (entry) => entry && entry instanceof Headers && Array.from(entry.keys()).length,
+    ) as Headers[]
+
+    context.response.body = response.body
+    context.response.headers = combineHeaders(...headers)
+    context.response.type = response.type || handlerOptions?.type
+    context.response.status = response.status || handlerOptions?.status
 }
