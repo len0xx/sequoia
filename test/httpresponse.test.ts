@@ -66,13 +66,12 @@ Deno.test('HTTPResponse class', async (t) => {
         const initializer: HTTPResponseOptions = {
             body: { ok: true },
             status: HTTPStatus.CREATED,
-            type: ContentType.JSON,
             headers: initialHeaders,
         }
         const res = new HTTPResponse(initializer)
         assertEquals(res.body, initializer.body)
         assertEquals(res.status, initializer.status)
-        assertEquals(res.type, initializer.type)
+        assertEquals(res.type, ContentType.JSON)
         assertInstanceOf(res.headers, Headers)
         assertEquals(res.headers.get('X-Server'), initialHeaders.get('X-Server'))
     })

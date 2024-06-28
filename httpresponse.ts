@@ -3,6 +3,7 @@
 import { HTTPStatus } from './status.ts'
 import { CookieStorage } from './cookie.ts'
 import { convertToBody, type Writeable } from './util.ts'
+import { ContentType } from './media.ts'
 
 export type ResponseBody = string | number | bigint | boolean | symbol | object | null | undefined
 export type ResponseBodyFunction = () => ResponseBody | Promise<ResponseBody>
@@ -49,7 +50,8 @@ export class HTTPResponse {
             this.body = typeof options.body === 'function'
                 ? (options.body as ResponseBodyFunction)()
                 : options.body
-            this.type = options.type
+            if (typeof options.body === 'object' && !options.type) this.type = ContentType.JSON
+            else this.type = options.type
             this.status = options.status ?? HTTPStatus.SUCCESS
             if (options.headers) this.headers = options.headers
         }

@@ -150,6 +150,7 @@ export class Application {
                 )
 
                 const response = await middleware(context)
+
                 if (response) {
                     response.applyCookies(context.cookies)
 
